@@ -5,9 +5,10 @@ import { House, Users, Calendar, FileText, CreditCard, Building2 } from "lucide-
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
 
+
   const menuItems = [
     { name: "Dashboard", icon: <House size={20} /> },
-    { name: "Employees", icon: <Users size={20} /> },
+    { name: "Employees", icon: <Users size={20} /> ,path: "/employees" },
     { name: "Attendance", icon: <Calendar size={20} /> },
     { name: "Leaves", icon: <FileText size={20} /> },
     { name: "Payroll", icon: <CreditCard size={20} /> },
