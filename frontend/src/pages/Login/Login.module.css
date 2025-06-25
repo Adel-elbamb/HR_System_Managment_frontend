@@ -1,0 +1,38 @@
+.card {
+  max-width: 430px;
+  width: 100%;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.iconCircle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: rgba(51, 102, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.signInBtn {
+  background: linear-gradient(90deg, #2563EB, #1D4ED8);
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.3s ease-in-out;
+}
+
+.signInBtn:hover {
+  opacity: 0.9;
+}
+.noRightBorder {
+  border-right: none !important;
+}
+
+.noLeftBorder {
+  border-left: none !important;
+}

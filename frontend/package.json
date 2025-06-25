@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.10.0",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.13.1",
     "lucide-react": "^0.516.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -26,6 +28,6 @@
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "vite": "^6.3.5"
+    "vite": "^5.1.6"
   }
 }
