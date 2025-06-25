@@ -5,9 +5,9 @@ import { Outlet } from 'react-router-dom';
 
 export default function MainLayout() {
   return (
-    <div className="container-fluid ps-0 pe-0">
+    <div className="container-fluid ps-0">
       <Header />
-      <div className="row w-100">
+      <div className="row">
         <div className="col-auto">
           <Sidebar />
         </div>
