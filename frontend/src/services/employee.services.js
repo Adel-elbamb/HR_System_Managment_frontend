@@ -11,11 +11,10 @@ const api = axios.create({
 
 // Get all employees (with optional query params)
 export const getAllEmployees = async (params = {}) => {
-  // Add parameters to get all employees, removing any backend limits
   const requestParams = {
-    limit: 1000, // Request a large limit to get all employees
-    skip: 0,     // Start from the beginning
-    ...params    // Allow additional params to be passed
+    limit: 1000, 
+    skip: 0,     
+    ...params    
   };
   const res = await api.get("/employee", { params: requestParams });
 

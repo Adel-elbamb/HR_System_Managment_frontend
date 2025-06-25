@@ -24,17 +24,17 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="search-box">
+      {/* <div className="search-box">
         <Search size={16} className="search-icon" />
         <input type="text" placeholder="Search employees..." />
-      </div>
+      </div> */}
 
       <div className="header-icons">
-        <div className="icon-with-dot">
+        {/* <div className="icon-with-dot">
           <Bell size={18} />
           <span className="dot" />
-        </div>
-        <Settings size={18} className="icon" />
+        </div> */}
+        {/* <Settings size={18} className="icon" /> */}
         <LogOut size={18} className="icon" onClick={handleLogout} style={{ cursor: 'pointer' }} />
       </div>
     </div>
