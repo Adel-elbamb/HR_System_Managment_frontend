@@ -529,8 +529,8 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                   required
                 >
                   <option value="">Select Overtime Type</option>
-                  <option value="hr">hr</option>
-                  <option value="pound">pound</option>
+                  <option value="hr">Hour</option>
+                  <option value="pound">Pound</option>
                 </select>
               </div>
             </div>
