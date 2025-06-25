@@ -1,17 +1,8 @@
 import React from "react";
 import "./Header.css";
 import { Search, Bell, Settings, LogOut, Users } from "lucide-react";
-import { authService } from "../../services/authService";
 
 const Header = () => {
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
   return (
     <div className="header shadow-sm">
       <div className="logo-section">
@@ -35,7 +26,7 @@ const Header = () => {
           <span className="dot" />
         </div>
         <Settings size={18} className="icon" />
-        <LogOut size={18} className="icon" onClick={handleLogout} style={{ cursor: 'pointer' }} />
+        <LogOut size={18} className="icon" />
       </div>
     </div>
   );
