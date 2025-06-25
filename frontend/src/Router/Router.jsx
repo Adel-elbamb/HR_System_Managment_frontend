@@ -2,17 +2,28 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import Dashboard from '../pages/Dashboard/Dashboard';
+
 import Employees  from '../pages/Employees/Employees';
 import AddEmployee from '../pages/Employees/AddEmployee';
 import DeletedEmployee from '../pages/Employees/DeletedEmployee';
 import EditEmployee from '../pages/Employees/EditEmployee';
 import EmployeeDetails from '../pages/Employees/ViewEmployee';
 
+
+import Login from '../pages/Login/Login';
+import ProtectedRoute from './ProtectedRoute';
+import Department from '../pages/Department/ViewDepartments/ViewDepartment';
+import Payroll from '../pages/Payroll/Payroll';
+
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <MainLayout />,
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    element: <ProtectedRoute />,
     children: [
+
       { path: '/', element: <Dashboard /> },
       { path: '/employees', element: <Employees /> },
       { path: '/add-employee', element: <AddEmployee /> },
@@ -20,6 +31,18 @@ const router = createBrowserRouter([
       { path: '/edit-employee/:id', element: <EditEmployee /> },
       { path: '/employee/:id', element: <EmployeeDetails /> },
       { path: '/dashboard', element: <Dashboard /> },
+
+      {
+        path: '/',
+        element: <MainLayout />,
+        children: [
+          { path: '/', element: <Dashboard /> },
+          { path: '/dashboard', element: <Dashboard /> },
+          { path: '/departments', element: <Department /> },
+          { path: '/payroll', element: <Payroll /> },
+        ]
+      }
+
     ]
   },
   
