@@ -1,60 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Dashboard.module.css';
 import axiosInstance from '../../services/axiosInstance';
+import { deleteEmployee } from "../../services/employee.services";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      // Fetch employees and calculate stats
+      const employeesRes = await axiosInstance.get('/employee');
+      const employeesData = employeesRes.data.data || [];
+      
+      // Calculate stats from employees data
+      const totalEmployees = employeesData.length;
+      const presentToday = Math.floor(totalEmployees * 0.85); // Mock data
+      const onLeave = Math.floor(totalEmployees * 0.1); // Mock data
+      const departments = new Set(employeesData.map(emp => emp.department)).size;
+      const statsData = {
+        totalEmployees,
+        presentToday,   
+        onLeave,
+        departments,
+        totalChange: 5,
+        presentChange: 2,
+        leaveChange: -1,
+        departmentsChange: 0
+      };
+      setStats(statsData);
+      setEmployees(employeesData.slice(0, 3)); // Get first 3 employees
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      // Set default stats if API fails 
+      setStats({
+        totalEmployees: 0,
+        presentToday: 0,
+        onLeave: 0,
+        departments: 0,
+        totalChange: 0,
+        presentChange: 0,
+        leaveChange: 0,
+        departmentsChange: 0
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Fetch employees and calculate stats
-        const employeesRes = await axiosInstance.get('/employee');
-        console.log(employeesRes.data);
-        const employeesData = employeesRes.data.data || [];
-        
-        // Calculate stats from employees data
-        const totalEmployees = employeesData.length;
-        const presentToday = Math.floor(totalEmployees * 0.85); // Mock data
-        const onLeave = Math.floor(totalEmployees * 0.1); // Mock data
-        const departments = new Set(employeesData.map(emp => emp.department)).size;
-        
-        const statsData = {
-          totalEmployees,
-          presentToday,
-          onLeave,
-          departments,
-          totalChange: 5,
-          presentChange: 2,
-          leaveChange: -1,
-          departmentsChange: 0
-        };
-        
-        setStats(statsData);
-        setEmployees(employeesData.slice(0, 3)); // Get first 3 employees
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-        // Set default stats if API fails
-        setStats({
-          totalEmployees: 0,
-          presentToday: 0,
-          onLeave: 0,
-          departments: 0,
-          totalChange: 0,
-          presentChange: 0,
-          leaveChange: 0,
-          departmentsChange: 0
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
+    const handleDelete = async (id) => {
+    await deleteEmployee(id);
+    fetchData();
+  };
 
   if (loading) {
     return (
@@ -92,9 +94,9 @@ const Dashboard = () => {
       <div className={`p-4 mx-4 ${styles.recentEmployees}`}>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h5>Recent Employees</h5>
-          <button className={`btn btn-primary ${styles.addButton}`}>
+          <a className={`btn btn-primary ${styles.addButton}`} href="/add-employee">
             <i className="bi bi-plus-lg me-2"></i> Add Employee
-          </button>
+          </a>
         </div>
         {employees.length > 0 ? (
           employees.map((emp) => (
@@ -111,10 +113,15 @@ const Dashboard = () => {
               <div className="d-flex align-items-center gap-3">
                 <span className={styles.statusBadge}>Active</span>
                 <span className="text-muted small">{new Date(emp.createdAt).toLocaleDateString()}</span>
-                <i className={`bi bi-eye ${styles.actionIcon}`} title="View Details"></i>
-                <i className={`bi bi-pencil ${styles.actionIcon}`} title="Edit Employee"></i>
-                <i className={`bi bi-trash ${styles.actionIcon} ${styles.delete}`} title="Delete Employee"></i>
-              </div>
+                <a href={`/employee/${emp._id}`}><i className={`bi bi-eye ${styles.actionIcon}`} title="View Details"></i></a>
+                <a href={`/edit-employee/${emp._id}`}><i className={`bi bi-pencil ${styles.actionIcon}`} title="Edit Employee"></i></a>
+                 <button
+                            className="btn btn-sm btn-light border"
+                            title="Delete"
+                            onClick={() => handleDelete(emp._id)}
+                          >
+                            <i className="fas fa-trash text-danger"></i>
+                          </button>              </div>
             </div>
           ))
         ) : (

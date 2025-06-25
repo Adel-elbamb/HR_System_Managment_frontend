@@ -481,8 +481,8 @@ const EditEmployee = () => {
                 className={`form-select ${fieldErrors.overtimeType ? 'is-invalid' : ''}`}
               >
                 <option value="">Select Overtime Type</option>
-                <option value="hr">hr</option>
-                <option value="pound">pound</option>
+                <option value="hr">Hour</option>
+                <option value="pound">Pound</option>
               </select>
             </div>
             <div className="col-md-6">
