@@ -1,7 +1,12 @@
 import axios from "axios";
+const token = localStorage.getItem('token');
 
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: 'http://localhost:3000/api',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`
+  }
 });
 
 // Get all employees (with optional query params)
@@ -13,6 +18,7 @@ export const getAllEmployees = async (params = {}) => {
     ...params    // Allow additional params to be passed
   };
   const res = await api.get("/employee", { params: requestParams });
+
   return res.data;
 };
 
