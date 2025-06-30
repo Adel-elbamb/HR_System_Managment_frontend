@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Attendences.module.css";
-import {
-  createAttendence,
-  updateAttendence,
-} from "../../services/Attendence.services";
+import { updateAttendence } from "../../services/Attendence.services";
 
-export default function AddAttendence({ isOpen, onClose, initialData }) {
+export default function UpdateAttendence({ isOpen, onClose, initialData }) {
   if (!isOpen) return null;
 
   const [employeeId, setEmployeeId] = useState("");
@@ -13,21 +10,14 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   const [checkOutTime, setCheckOutTime] = useState("");
   const [status, setStatus] = useState("casual");
 
-  // ✅ عند استلام بيانات تعديل، نملأ الفورم
   useEffect(() => {
     if (initialData) {
       setEmployeeId(initialData.employeeId?._id || initialData.employeeId || "");
       setCheckInTime(initialData.checkInTime || "");
       setCheckOutTime(initialData.checkOutTime || "");
       setStatus(initialData.status || "casual");
-    } else {
-      // لو فتحنا المودال للإضافة، نفرغ الفورم
-      setEmployeeId("");
-      setCheckInTime("");
-      setCheckOutTime("");
-      setStatus("casual");
     }
-  }, [initialData, isOpen]);
+  }, [initialData]);
 
   const handleSubmit = async () => {
     const payload = {
@@ -38,17 +28,11 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
     };
 
     try {
-      if (initialData) {
-        // ✅ تعديل
-        await updateAttendence(initialData._id, payload);
-      } else {
-        // ✅ إضافة
-        await createAttendence(payload);
-      }
+      await updateAttendence(initialData._id, payload); // ✅ استخدم ID
       onClose();
     } catch (error) {
       console.error(
-        "Error saving attendance:",
+        "Error updating attendance:",
         error.response?.data || error.message
       );
     }
@@ -57,9 +41,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h3 className={styles.heading}>
-          {initialData ? "Edit Attendance" : "Add Attendance"}
-        </h3>
+        <h3 className={styles.heading}>Edit Attendance</h3>
 
         <input
           type="text"
@@ -97,7 +79,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
         </select>
 
         <button className={styles.submitBtn} onClick={handleSubmit}>
-          {initialData ? "Update" : "Submit"}
+          Update
         </button>
         <button onClick={onClose} className={styles.closeBtn}>
           Close
