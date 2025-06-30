@@ -13,7 +13,6 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   const [checkOutTime, setCheckOutTime] = useState("");
   const [status, setStatus] = useState("casual");
 
-  // ✅ عند استلام بيانات تعديل، نملأ الفورم
   useEffect(() => {
     if (initialData) {
       setEmployeeId(initialData.employeeId?._id || initialData.employeeId || "");
@@ -21,7 +20,6 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
       setCheckOutTime(initialData.checkOutTime || "");
       setStatus(initialData.status || "casual");
     } else {
-      // لو فتحنا المودال للإضافة، نفرغ الفورم
       setEmployeeId("");
       setCheckInTime("");
       setCheckOutTime("");
@@ -39,10 +37,8 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
 
     try {
       if (initialData) {
-        // ✅ تعديل
         await updateAttendence(initialData._id, payload);
       } else {
-        // ✅ إضافة
         await createAttendence(payload);
       }
       onClose();

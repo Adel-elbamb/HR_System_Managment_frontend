@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AddAttendence from "./AddAttendence";
-import { getAttendences } from "../../services/Attendence.services";
+import {
+  getAttendences,
+  deleteAttendence,
+} from "../../services/Attendence.services";
 
 export default function Attendence() {
   const [showModal, setShowModal] = useState(false);
@@ -17,19 +20,25 @@ export default function Attendence() {
   }, []);
 
   const handleAdd = () => {
-    setSelectedAttendence(null); 
+    setSelectedAttendence(null);
     setShowModal(true);
   };
 
   const handleEdit = (att) => {
-    setSelectedAttendence(att); 
+    setSelectedAttendence(att);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedAttendence(null);
-    fetchattendence(); 
+    fetchattendence();
+  };
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this attendance?")) {
+      await deleteAttendence(id);
+      fetchattendence();
+    }
   };
 
   return (
@@ -66,6 +75,7 @@ export default function Attendence() {
                 <th scope="col">Date</th>
                 <th scope="col">Check-in-Time</th>
                 <th scope="col">Check-Out-Time</th>
+                <th scope="col">Status</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -78,18 +88,19 @@ export default function Attendence() {
                   <td>{att.date}</td>
                   <td>{att.checkInTime || "-"}</td>
                   <td>{att.checkOutTime || "-"}</td>
-                  <td>
-                    
+                  <td>{att.status}</td>
 
+                  <td>
                     <i
                       className="bi bi-pencil-square me-2 text-warning"
                       style={{ cursor: "pointer" }}
-                      onClick={() => handleEdit(att)} 
+                      onClick={() => handleEdit(att)}
                     ></i>
 
                     <i
                       className="bi bi-trash text-danger"
                       style={{ cursor: "pointer" }}
+                      onClick={() => handleDelete(att._id)}
                     ></i>
                   </td>
                 </tr>

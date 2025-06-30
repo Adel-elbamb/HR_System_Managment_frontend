@@ -27,15 +27,25 @@ export async function createAttendence(payload) {
 
 export async function updateAttendence(id, payload) {
   try {
-    if (!id || !payload) {
-      throw new Error("ID and payload are required to update attendance.");
-    }
 
     const { data } = await axios.put(`http://127.0.0.1:3000/api/attendance/${id}`, payload);
     return data.attendance;
 
   } catch (error) {
     console.error("Error updating attendance:", error.response?.data || error.message);
+    throw error;
+  }
+}
+
+export async function deleteAttendence(id) {
+  try {
+   
+
+    const { data } = await axios.delete(`http://127.0.0.1:3000/api/attendance/${id}`);
+    return data.attendance;
+
+  } catch (error) {
+    console.error("Error deleting attendance:", error.response?.data || error.message);
     throw error;
   }
 }
