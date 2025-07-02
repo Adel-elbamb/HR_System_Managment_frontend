@@ -8,7 +8,6 @@ const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
 
 
- 
   const menuItems = [
     { name: "Dashboard", icon: <House size={20} />, path: "/dashboard" },
     { name: "Employees", icon: <Users size={20} />, path: "/employees" },

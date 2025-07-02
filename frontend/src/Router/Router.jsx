@@ -14,13 +14,13 @@ import ProtectedRoute from './ProtectedRoute';
 import Department from '../pages/Department/ViewDepartments/ViewDepartment';
 import Payroll from '../pages/Payroll/Payroll';
 
+import Attendence from '../pages/Attendence/Attendence';
+import AddAttendence from '../pages/Attendence/AddAttendence';
+// 
 const router = createBrowserRouter([
   {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    element: <ProtectedRoute />,
+    path: '/',
+    element: <MainLayout />,
     children: [
       {
         element: <MainLayout />,
@@ -38,6 +38,14 @@ const router = createBrowserRouter([
       },
     ],
   },
+     
+      {path:'attendence',element:<Attendence/>},
+      {path:'addattendence',element:<AddAttendence/>},
+      
+
+      
+    ]
+  }
 ]);
 
 export default router;
