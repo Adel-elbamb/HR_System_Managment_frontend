@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Attendences.module.css";
+import style from "./Attendences.module.css";
 import {
   createAttendence,
   updateAttendence,
@@ -51,16 +51,16 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <h3 className={styles.heading}>
+<div className={style.modalOverlay}>
+      <div className={style.modal}>
+        <h3 className={style.heading}>
           {initialData ? "Edit Attendance" : "Add Attendance"}
         </h3>
 
         <input
           type="text"
           placeholder="Employee ID"
-          className={styles.input}
+          className={style.input}
           value={employeeId}
           onChange={(e) => setEmployeeId(e.target.value)}
         />
@@ -68,7 +68,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
         <input
           type="time"
           placeholder="Check-In Time"
-          className={styles.input}
+          className={style.input}
           value={checkInTime}
           onChange={(e) => setCheckInTime(e.target.value)}
         />
@@ -76,26 +76,25 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
         <input
           type="time"
           placeholder="Check-Out Time"
-          className={styles.input}
+          className={style.input}
           value={checkOutTime}
           onChange={(e) => setCheckOutTime(e.target.value)}
         />
 
         <select
-          className={styles.input}
+          className={style.input}
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
           <option value="">Select Status</option>
           <option value="present">Present</option>
           <option value="absent">Absent</option>
-          <option value="leave">Leave</option>
         </select>
 
-        <button className={styles.submitBtn} onClick={handleSubmit}>
+        <button className={style.submitBtn} onClick={handleSubmit}>
           {initialData ? "Update" : "Submit"}
         </button>
-        <button onClick={onClose} className={styles.closeBtn}>
+        <button onClick={onClose} className={style.closeBtn}>
           Close
         </button>
       </div>
