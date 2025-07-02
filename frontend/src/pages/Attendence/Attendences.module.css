@@ -1,0 +1,57 @@
+/* styles.module.css */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* modal box */
+.modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 0 10px rgba(171, 168, 168, 0.2);
+}
+
+/* form inputs */
+.modal input,
+.modal select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* submit button */
+.submitBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* close button */
+.closeBtn {
+  background: #eee;
+  color: #333;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* .closeBtn:hover {
+  background: #3b82f6;
+} */
