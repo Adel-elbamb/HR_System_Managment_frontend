@@ -34,6 +34,8 @@ const router = createBrowserRouter([
           { path: '/employee/:id', element: <EmployeeDetails /> },
           { path: '/departments', element: <Department /> },
           { path: '/payroll', element: <Payroll /> },
+          {path:'attendence',element:<Attendence/>},
+          {path:'addattendence',element:<AddAttendence/>},
         ],
       },
     ],
