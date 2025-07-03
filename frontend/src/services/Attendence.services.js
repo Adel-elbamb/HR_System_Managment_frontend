@@ -1,8 +1,12 @@
 import axios from "axios";
-
+const token = localStorage.getItem('token');
 //  baseURL 
 const api = axios.create({
   baseURL: "http://127.0.0.1:3000/api/attendance",
+   headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`
+  }
 });
 
 // Get all attendances
