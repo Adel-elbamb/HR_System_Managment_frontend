@@ -9,6 +9,7 @@ const Holiday = () => {
   const [editingHoliday, setEditingHoliday] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showError, setShowError] = useState(false);
 
   // Fetch holidays from API
   const fetchHolidays = async () => {
@@ -29,6 +30,15 @@ const Holiday = () => {
   useEffect(() => {
     fetchHolidays();
   }, []);
+
+  // Show error popup for 3 seconds
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+      const timer = setTimeout(() => setShowError(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   // Add holiday
   const handleAdd = async (holiday) => {
@@ -81,11 +91,7 @@ const Holiday = () => {
   return (
     <div className={styles.holidayPage} dir="rtl">
       <h2 className={styles.title}>Holiday Management</h2>
-      {error && (
-        <div style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
-          {error}
-        </div>
-      )}
+      {showError && <div className={styles.errorPopup}>{error}</div>}
       <div className={styles.formSection}>
         <HolidayForm onAdd={handleAdd} />
       </div>
