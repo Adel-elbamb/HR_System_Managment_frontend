@@ -4,18 +4,35 @@ import {
   createAttendence,
   updateAttendence,
 } from "../../services/Attendence.services";
+import { getAllEmployees } from "../../services/employee.services";
 
 export default function AddAttendence({ isOpen, onClose, initialData }) {
   if (!isOpen) return null;
 
+  const [employees, setEmployees] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [checkInTime, setCheckInTime] = useState("");
   const [checkOutTime, setCheckOutTime] = useState("");
   const [status, setStatus] = useState("casual");
 
   useEffect(() => {
+    const fetchEmployees = async () => {
+      const { data } = await getAllEmployees();
+
+      if (Array.isArray(data)) {
+        setEmployees(data);
+      } else {
+        console.warn("Unexpected employee data format:", data);
+        setEmployees([]);
+      }
+    };
+
+    fetchEmployees();
+
     if (initialData) {
-      setEmployeeId(initialData.employeeId?._id || initialData.employeeId || "");
+      setEmployeeId(
+        initialData.employeeId?._id || initialData.employeeId || ""
+      );
       setCheckInTime(initialData.checkInTime || "");
       setCheckOutTime(initialData.checkOutTime || "");
       setStatus(initialData.status || "casual");
@@ -51,19 +68,35 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   };
 
   return (
-<div className={style.modalOverlay}>
+    <div className={style.modalOverlay}>
       <div className={style.modal}>
         <h3 className={style.heading}>
           {initialData ? "Edit Attendance" : "Add Attendance"}
         </h3>
 
-        <input
-          type="text"
-          placeholder="Employee ID"
-          className={style.input}
-          value={employeeId}
-          onChange={(e) => setEmployeeId(e.target.value)}
-        />
+        {initialData ? (
+          <input
+            type="text"
+            className={style.input}
+            value={
+              employees.find((emp) => emp._id === employeeId)?.name 
+            }
+            disabled
+          />
+        ) : (
+          <select
+            className={style.input}
+            value={employeeId}
+            onChange={(e) => setEmployeeId(e.target.value)}
+          >
+            <option value="">Select Employee</option>
+            {employees.map((emp) => (
+              <option key={emp._id} value={emp._id}>
+                {emp.name}
+              </option>
+            ))}
+          </select>
+        )}
 
         <input
           type="time"

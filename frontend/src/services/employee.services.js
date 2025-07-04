@@ -19,7 +19,9 @@ export const getAllEmployees = async (params = {}) => {
   const res = await api.get("/employee", { params: requestParams });
 
   return res.data;
+  
 };
+
 
 // Get total count of employees
 export const getEmployeeCount = async () => {

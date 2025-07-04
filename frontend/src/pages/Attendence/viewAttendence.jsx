@@ -7,7 +7,7 @@ export default function ViewAttendence({ isOpen, onClose, data }) {
   return (
 <div className={styles.modalOverlay}>
       <div className={styles.modal}>
-        <h3 className={styles.heading}>Attendance Details</h3>
+        <h3 className={`${styles.heading } `}>Attendance Details</h3>
 
         <div className="mb-3">
           <strong className="text-primary">Employee:</strong>{" "}

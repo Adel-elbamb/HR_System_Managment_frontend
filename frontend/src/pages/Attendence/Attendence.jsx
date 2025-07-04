@@ -91,7 +91,7 @@ export default function Attendence() {
     const newErrors = {};
 
     if (!start && !end) {
-      newErrors.fromDate = "At least one date is required";
+      newErrors.fromDate = "At least one  is required";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -231,43 +231,43 @@ export default function Attendence() {
       </div>
 
       <div className="table-responsive mt-4">
-        <table className="table">
-          <thead>
+        <table className="table  table-striped">
+          <thead className="">
             <tr>
-              <th className="text-primary">Employee</th>
-              <th className="text-primary">Date</th>
-              <th className="text-primary">Check-in</th>
-              <th className="text-primary">Check-out</th>
-              <th className="text-primary">Status</th>
-              <th className="text-primary">Actions</th>
+              <th className="text-center">Employee</th>
+              <th className="text-center">Date</th>
+              <th className="text-center">Check-in</th>
+              <th className="text-center">Check-out</th>
+              <th className="text-center">Status</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.length > 0 ? (
               currentItems.map((att) => (
                 <tr key={att._id}>
-                  <td>
+                  <td className="text-center">
                     {att.employeeId
                       ? `${att.employeeId.firstName || ""} ${att.employeeId.lastName || ""}`
                       : "Unknown"}
                   </td>
-                  <td>{formatDate(att.date)}</td>
-                  <td>{att.checkInTime || "-"}</td>
-                  <td>{att.checkOutTime || "-"}</td>
-                  <td>{att.status || "N/A"}</td>
-                  <td>
+                  <td className="text-center">{formatDate(att.date)}</td>
+                  <td className="text-center">{att.checkInTime || "-"}</td>
+                  <td className="text-center">{att.checkOutTime || "-"}</td>
+                  <td className="text-center">{att.status || "N/A"}</td>
+                  <td className="text-center ">
                     <i
-                      className="bi bi-eye me-2 text-primary"
+                      className="fas fa-eye text-muted me-2"
                       style={{ cursor: "pointer" }}
                       onClick={() => handleView(att._id)}
                     ></i>
                     <i
-                      className="bi bi-pencil-square me-2 text-primary"
+                      className="fas fa-edit text-secondary me-2"
                       style={{ cursor: "pointer" }}
                       onClick={() => handleEdit(att)}
                     ></i>
                     <i
-                      className="bi bi-trash text-danger"
+                      className="fas fa-trash text-danger me-2"
                       style={{ cursor: "pointer" }}
                       onClick={() => handleDelete(att._id)}
                     ></i>
