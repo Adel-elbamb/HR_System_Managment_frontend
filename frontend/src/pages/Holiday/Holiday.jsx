@@ -54,6 +54,7 @@ const Holiday = () => {
       fetchHolidays();
     } catch (err) {
       setError("Failed to update holiday.");
+      setEditingHoliday(null);
       setLoading(false);
     }
   };
