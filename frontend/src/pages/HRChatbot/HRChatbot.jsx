@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import askChatBot from '../../services/chatbot.services.js';
+import './HRChatbot.css';
 
 const HRChatbot = () => {
   const [message, setMessage] = useState('');
@@ -14,7 +15,8 @@ const HRChatbot = () => {
 
   // Enhanced suggested questions for HR usage
   const suggestedQuestions = [
-    "Tell me about employee Ahmed",
+    "I want info about Ahmed",
+    "Tell me about Ahmed",
     "How do I add a new employee?",
     "How do I calculate overtime pay?",
     "What are the attendance rules?",
@@ -35,7 +37,7 @@ const HRChatbot = () => {
       
       const botMessage = {
         sender: 'Bot',
-        text: response.data?.answer || 'Sorry, I couldn\'t process your request. Please try again.',
+        text: response.data?.answer || response.answer || 'I\'m here to help! What would you like to know about?',
         timestamp: new Date()
       };
       
@@ -44,7 +46,25 @@ const HRChatbot = () => {
       console.error("❌ Chat error:", error);
       const errorMessage = {
         sender: 'Bot',
-        text: '❌ Sorry, I encountered an error. Please check your connection and try again.',
+        text: `🤖 **I'm here to help!** 
+
+It looks like I couldn't process your request right now. Here are some things I can help you with:
+
+**📋 Employee Management:**
+• "I want info about [employee name]"
+• "How do I add a new employee?"
+• "Show me all employees"
+
+**💰 Payroll & Attendance:**
+• "How do I calculate overtime?"
+• "What are the attendance rules?"
+• "How does payroll work?"
+
+**🏢 Department Management:**
+• "How do I add a new department?"
+• "How do I assign employees to departments?"
+
+**Try asking your question again, or use one of the suggested questions above!**`,
         timestamp: new Date()
       };
       setChat(prev => [...prev, errorMessage]);
@@ -61,16 +81,24 @@ const HRChatbot = () => {
     sendMessage(question);
   };
 
+  // Auto-resize textarea
+  const handleTextareaChange = (e) => {
+    setMessage(e.target.value);
+    // Auto-resize textarea
+    const textarea = e.target;
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+  };
+
   // Component to render suggested questions
   const SuggestedQuestions = () => (
-    <div className="mb-3">
-      <p style={{ fontSize: '12px', color: '#6c757d', marginBottom: '10px' }}>Quick questions:</p>
-      <div className="d-flex flex-wrap gap-1 justify-content-center">
+    <div className="suggested-questions">
+      <p className="suggestions-label">💡 Quick questions:</p>
+      <div className="suggestions-grid">
         {suggestedQuestions.map((question, index) => (
           <button
             key={index}
-            className="btn btn-outline-primary btn-sm"
-            style={{ fontSize: '10px', padding: '4px 8px' }}
+            className="suggestion-btn"
             onClick={() => handleSuggestedQuestion(question)}
             disabled={loading}
           >
@@ -85,86 +113,70 @@ const HRChatbot = () => {
     <>
       {/* Floating Chat Icon */}
       <button
-        className="btn btn-primary position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg"
-        style={{ 
-          width: 60, 
-          height: 60, 
-          zIndex: 1050,
-          fontSize: '24px',
-          border: 'none',
-          transition: 'transform 0.2s'
-        }}
+        className={`chat-toggle-btn ${isOpen ? 'active' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
-        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
       >
-        💬
+        <div className="chat-icon">
+          {isOpen ? '✕' : '💬'}
+        </div>
+        <div className="chat-pulse"></div>
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div 
-          className="card position-fixed bottom-0 end-0 m-4 shadow-lg border-0" 
-          style={{ 
-            width: 420, 
-            height: 600, 
-            zIndex: 1049,
-            borderRadius: '15px'
-          }}
-        >
+        <div className="chat-container">
           {/* Header */}
-          <div className="card-header d-flex justify-content-between align-items-center bg-primary text-white" 
-               style={{ borderRadius: '15px 15px 0 0', border: 'none' }}>
-            <div className="d-flex align-items-center">
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>🤖 HR Assistant</span>
+          <div className="chat-header">
+            <div className="chat-header-content">
+              <div className="chat-title">
+                <div className="bot-avatar">🤖</div>
+                <div className="title-text">
+                  <h3>HR Assistant</h3>
+                  <span className="status">Online</span>
+                </div>
+              </div>
+              <button 
+                className="close-btn" 
+                onClick={() => setIsOpen(false)}
+              >
+                ✕
+              </button>
             </div>
-            <button 
-              className="btn-close btn-close-white" 
-              onClick={() => setIsOpen(false)}
-              style={{ fontSize: '12px' }}
-            />
           </div>
 
           {/* Chat Body */}
-          <div className="card-body d-flex flex-column p-0" style={{ height: 'calc(100% - 60px)' }}>
+          <div className="chat-body">
             {/* Messages Area */}
-            <div className="flex-grow-1 overflow-auto p-3" style={{ maxHeight: 'calc(100% - 140px)' }}>
+            <div className="messages-container">
               {chat.length === 0 && (
-                <div className="text-center text-muted mt-4">
-                  <div style={{ fontSize: '48px', marginBottom: '10px' }}>👋</div>
-                  <p>Hello! I'm your HR Assistant.</p>
-                  <p style={{ fontSize: '14px', marginBottom: '15px' }}>I can help you with:</p>
+                <div className="welcome-message">
+                  <div className="welcome-icon">👋</div>
+                  <h2>Hello! I'm your HR Assistant</h2>
+                  <p>I can help you with employee management, payroll, and more!</p>
                   
                   {/* Employee Search Example */}
-                  <div className="mb-3 p-2 bg-light rounded">
-                    <p style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>🔍 Employee Search:</p>
-                    <p style={{ fontSize: '11px', color: '#6c757d' }}>Try: "Tell me about employee [Name]"</p>
-                    <p style={{ fontSize: '11px', color: '#6c757d' }}>Example: "Tell me about employee John Smith"</p>
+                  <div className="search-example">
+                    <h4>🔍 Employee Search</h4>
+                    <p>Try: "I want info about [Name]" or "Tell me about employee [Name]"</p>
+                    <p>Examples: "I want info about Ahmed" or "Tell me about employee John Smith"</p>
+                    <p>For first name only: "Show me only employees with first name Ali"</p>
                   </div>
                   
                   {/* Suggested Questions */}
                   <SuggestedQuestions />
                   
-                  <div style={{ fontSize: '12px', color: '#6c757d' }}>
-                    <p>Or type your own question below!</p>
-                  </div>
+                  <p className="welcome-footer">Or type your own question below!</p>
                 </div>
               )}
               
               {chat.map((msg, i) => (
-                <div key={i} className={`mb-3 ${msg.sender === 'User' ? 'text-end' : 'text-start'}`}>
-                  <div className={`d-inline-block p-2 rounded-3 ${
-                    msg.sender === 'User' 
-                      ? 'bg-primary text-white' 
-                      : 'bg-light text-dark'
-                  }`} style={{ maxWidth: '85%', wordWrap: 'break-word' }}>
-                    <div style={{ fontSize: '14px', whiteSpace: 'pre-line' }}>{msg.text}</div>
-                    <div style={{ 
-                      fontSize: '10px', 
-                      opacity: 0.7, 
-                      marginTop: '4px',
-                      textAlign: msg.sender === 'User' ? 'right' : 'left'
-                    }}>
+                <div key={i} className={`message-wrapper ${msg.sender === 'User' ? 'user-message' : 'bot-message'}`}>
+                  <div className="message-bubble">
+                    <div className="message-content">
+                      {msg.sender === 'Bot' && <div className="bot-indicator">🤖</div>}
+                      <div className="message-text">{msg.text}</div>
+                    </div>
+                    <div className="message-time">
                       {formatTime(msg.timestamp)}
                     </div>
                   </div>
@@ -172,13 +184,18 @@ const HRChatbot = () => {
               ))}
               
               {loading && (
-                <div className="text-start mb-3">
-                  <div className="d-inline-block p-2 rounded-3 bg-light">
-                    <div className="d-flex align-items-center">
-                      <div className="spinner-border spinner-border-sm me-2" role="status">
-                        <span className="visually-hidden">Loading...</span>
+                <div className="message-wrapper bot-message">
+                  <div className="message-bubble loading-bubble">
+                    <div className="message-content">
+                      <div className="bot-indicator">🤖</div>
+                      <div className="loading-indicator">
+                        <div className="typing-dots">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                        <span>Searching...</span>
                       </div>
-                      <span style={{ fontSize: '14px' }}>Searching...</span>
                     </div>
                   </div>
                 </div>
@@ -186,7 +203,7 @@ const HRChatbot = () => {
               
               {/* Show suggested questions after every response */}
               {chat.length > 0 && !loading && (
-                <div className="text-center mt-3">
+                <div className="suggestions-after-response">
                   <SuggestedQuestions />
                 </div>
               )}
@@ -195,30 +212,33 @@ const HRChatbot = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-3 border-top">
-              <div className="input-group">
-                <input
-                  className="form-control"
-                  type="text"
+            <div className="chat-input-container">
+              <div className="input-wrapper">
+                <textarea
+                  className="chat-input"
                   placeholder="Ask about employees or HR features..."
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && !loading && sendMessage()}
+                  onChange={handleTextareaChange}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey && !loading) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
                   disabled={loading}
-                  style={{ borderRadius: '20px 0 0 20px', border: '1px solid #dee2e6' }}
+                  rows="1"
                 />
                 <button 
-                  className="btn btn-primary" 
+                  className="send-btn" 
                   onClick={() => sendMessage()}
                   disabled={loading || !message.trim()}
-                  style={{ borderRadius: '0 20px 20px 0', border: 'none' }}
                 >
                   {loading ? (
-                    <span className="spinner-border spinner-border-sm" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </span>
+                    <div className="send-loading">
+                      <div className="spinner"></div>
+                    </div>
                   ) : (
-                    'Send'
+                    <span>Send</span>
                   )}
                 </button>
               </div>

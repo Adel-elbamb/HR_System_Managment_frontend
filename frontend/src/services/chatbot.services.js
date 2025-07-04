@@ -10,19 +10,52 @@ const api = axios.create({
 });
 
 // Function to search for all employees by name
-const searchEmployeesByName = async (employeeName) => {
+const searchEmployeesByName = async (employeeName, searchType = 'all') => {
   try {
     const response = await api.get("/employee");
     const employees = response.data.data || [];
     
-    // Search for all employees by name (case-insensitive)
-    const foundEmployees = employees.filter(emp => 
-      emp.firstName?.toLowerCase().includes(employeeName.toLowerCase()) ||
-      emp.lastName?.toLowerCase().includes(employeeName.toLowerCase()) ||
-      `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(employeeName.toLowerCase())
-    );
+    console.log(`🔍 Searching for "${employeeName}" (${searchType})`);
+    console.log(`📊 Total employees in system: ${employees.length}`);
     
-    console.log(`Searching for "${employeeName}": Found ${foundEmployees.length} employees`);
+    let foundEmployees;
+    
+    if (searchType === 'firstname') {
+      // Search only by first name (exact match or starts with)
+      foundEmployees = employees.filter(emp => 
+        emp.firstName?.toLowerCase() === employeeName.toLowerCase() ||
+        emp.firstName?.toLowerCase().startsWith(employeeName.toLowerCase())
+      );
+    } else {
+      // More precise search - prioritize exact matches
+      foundEmployees = employees.filter(emp => {
+        const firstName = emp.firstName?.toLowerCase() || '';
+        const lastName = emp.lastName?.toLowerCase() || '';
+        const fullName = `${firstName} ${lastName}`.trim();
+        const searchTerm = employeeName.toLowerCase();
+        
+        // Exact matches first
+        if (firstName === searchTerm || lastName === searchTerm || fullName === searchTerm) {
+          return true;
+        }
+        
+        // Only include if the search term is a complete word match
+        // This prevents "ahmed" from matching "adhm" or "ad hadmmams"
+        const firstNameWords = firstName.split(' ');
+        const lastNameWords = lastName.split(' ');
+        const fullNameWords = fullName.split(' ');
+        
+        return firstNameWords.some(word => word === searchTerm) ||
+               lastNameWords.some(word => word === searchTerm) ||
+               fullNameWords.some(word => word === searchTerm);
+      });
+    }
+    
+    console.log(`✅ Found ${foundEmployees.length} employees for "${employeeName}"`);
+    if (foundEmployees.length > 0) {
+      console.log(`📋 Matches:`, foundEmployees.map(emp => `${emp.firstName} ${emp.lastName}`));
+    }
+    
     return foundEmployees;
   } catch (error) {
     console.error("Error searching for employees:", error);
@@ -37,48 +70,60 @@ const getHRFriendlyResponse = (question) => {
   console.log("Checking for HR-friendly response for:", question);
   
   if (lowerQuestion.includes('add') && lowerQuestion.includes('employee')) {
-    return `📝 **Adding a New Employee:**
+    return `🎉 **Adding a New Team Member:**
 
 1. Go to **Employees** in the main menu
 2. Click **"Add Employee"**
-3. Fill in the employee details
+3. Fill in their details
 4. Click **"Save"**
 
-That's it! The employee is now in the system.`;
+**That's it!** Your new team member is now in the system! 🚀
+
+**💡 Pro tip:** You can also edit their info anytime if you need to update something! 😊`;
   }
   
   if (lowerQuestion.includes('update') || lowerQuestion.includes('edit') || lowerQuestion.includes('modify')) {
-    return `✏️ **Updating Employee Information:**
+    return `✏️ **Updating Team Member Info:**
 
 1. Go to **Employees**
-2. Find the employee you want to update
+2. Find the person you want to update
 3. Click **"Edit"** next to their name
 4. Make your changes
 5. Click **"Save"**
 
-You can update salary, department, contact info, and working hours.`;
+**You can update:**
+• Salary 💰
+• Department 🏢
+• Contact info 📞
+• Working hours ⏰
+
+**💡 Easy peasy!** Everything gets updated instantly! 😊`;
   }
   
   if (lowerQuestion.includes('delete') || lowerQuestion.includes('remove')) {
-    return `🗑️ **Removing an Employee:**
+    return `🗑️ **Removing a Team Member:**
 
 1. Go to **Employees**
-2. Find the employee you want to remove
+2. Find the person you want to remove
 3. Click **"Delete"** next to their name
 4. Confirm the deletion
 
-**Note:** Employees can be restored later if needed.`;
+**💡 Don't worry!** They can be restored later if you change your mind! 😊
+
+**Note:** This just hides them from the active list - they're not gone forever!`;
   }
   
   if (lowerQuestion.includes('restore')) {
-    return `🔄 **Restoring a Deleted Employee:**
+    return `🔄 **Bringing Back a Team Member:**
 
 1. Go to **Employees**
 2. Click **"Deleted Employees"** tab
-3. Find the employee you want to restore
+3. Find the person you want to bring back
 4. Click **"Restore"**
 
-The employee will be back in the system with all their information.`;
+**🎉 Welcome back!** They'll be back in the system with all their info intact! 😊
+
+**💡 It's like they never left!** All their data is preserved.`;
   }
   
   if (lowerQuestion.includes('search') || lowerQuestion.includes('find')) {
@@ -156,7 +201,7 @@ Everything is tracked automatically!`;
 2. Select their department from the dropdown
 3. Save the changes
 
-That's it!`;
+**💡 Pro tip:** You can also view all departments and see which employees belong to each one! 😊`;
   }
   
   if (lowerQuestion.includes('holiday')) {
@@ -213,14 +258,65 @@ const askChatBot = async (question) => {
   try {
     console.log("Sending question to chatbot:", question);
     
-    // Check if the question is asking about a specific employee
-    const employeeNameMatch = question.match(/(?:employee|worker|staff|person)\s+(?:named\s+)?([a-zA-Z\s]+)/i);
+    // Check if the question is asking about a specific employee - more flexible pattern with typos
+    // Only match if it's clearly asking about a person, not general topics
+    const employeeNameMatch = question.match(/(?:employee|worker|staff|person|info\w*\s+about|tell\s+me\s+about|show\s+me|find|search\s+for)\s+(?:named\s+)?([a-zA-Z\s]+)/i);
     
-    if (employeeNameMatch) {
-      const employeeName = employeeNameMatch[1].trim();
-      console.log("Searching for employees:", employeeName);
+    // Check if this is actually about a person (not a general topic)
+    const isPersonQuery = employeeNameMatch && 
+                !question.toLowerCase().includes('department') &&
+                !question.toLowerCase().includes('salary') &&
+                !question.toLowerCase().includes('payroll') &&
+                !question.toLowerCase().includes('attendance') &&
+                !question.toLowerCase().includes('overtime') &&
+                !question.toLowerCase().includes('holiday') &&
+                !question.toLowerCase().includes('add') &&
+                !question.toLowerCase().includes('edit') &&
+                !question.toLowerCase().includes('delete') &&
+                !question.toLowerCase().includes('remove') &&
+                !question.toLowerCase().includes('restore');
+    
+    if (isPersonQuery) {
+      let employeeName = employeeNameMatch[1].trim();
       
-      const employees = await searchEmployeesByName(employeeName);
+      // Clean up the name - remove "employee" if it's part of the name
+      employeeName = employeeName.replace(/\b(employee|worker|staff|person)\b/gi, '').trim();
+      
+      console.log("🔍 Original question:", question);
+      console.log("📝 Extracted name:", employeeNameMatch[1]);
+      console.log("✨ Cleaned name:", employeeName);
+      
+      // Check if the name is empty after cleaning
+      if (!employeeName) {
+        console.log("⚠️ Warning: Name is empty after cleaning!");
+        return {
+          success: true,
+          message: "No name provided",
+          data: {
+            question,
+            answer: `🤔 **I didn't catch the name you're looking for!**
+
+Could you try asking again? For example:
+• "Tell me about Ahmed"
+• "I want info about John"
+• "Show me employee Sarah"
+
+**💡 Make sure to include the person's name in your question!** 😊`,
+            timestamp: new Date().toISOString()
+          }
+        };
+      }
+      
+      // Check if user wants first name only search
+      const isFirstNameOnly = question.toLowerCase().includes('first name') || 
+                             question.toLowerCase().includes('only') ||
+                             question.toLowerCase().includes('exactly') ||
+                             question.toLowerCase().includes('just');
+      
+      const searchType = isFirstNameOnly ? 'firstname' : 'all';
+      console.log("🔎 Search type:", searchType);
+      
+      const employees = await searchEmployeesByName(employeeName, searchType);
       
       if (employees.length > 0) {
         // Return all matching employees
@@ -258,14 +354,19 @@ const askChatBot = async (question) => {
           message: "No employees found",
           data: {
             question,
-            answer: `No employees found with name "${employeeName}".\n\n📝 **Adding a New Employee:**
+            answer: `😕 **Oops! I couldn't find anyone named "${employeeName}" in your team.**
 
+No worries though! Here's how to add someone new:
+
+**📝 Adding a New Team Member:**
 1. Go to **Employees** in the main menu
-2. Click **"Add Employee"**
-3. Fill in the employee details
+2. Click **"Add Employee"** 
+3. Fill in their details
 4. Click **"Save"**
 
-That's it! The employee is now in the system.`,
+**That's it!** Your new team member will be in the system! 🎉
+
+**💡 Tip:** Make sure you have the correct spelling of the name. Sometimes names can be tricky! 😊`,
             timestamp: new Date().toISOString()
           }
         };
@@ -288,36 +389,55 @@ That's it! The employee is now in the system.`,
       };
     }
     
-    // For any other questions, provide simple HR guidance instead of AI
-    console.log("Providing simple HR guidance");
-    return {
-      success: true,
-      message: "HR guidance provided",
-      data: {
-        question,
-        answer: `I can help you with HR tasks! Here are some things I can assist with:
+    // Check for general HR topics that should go to AI
+    const generalTopics = [
+      'department', 'salary', 'payroll', 'attendance', 'overtime', 
+      'holiday', 'add', 'edit', 'delete', 'remove', 'restore',
+      'calculate', 'management', 'system', 'how', 'what', 'when', 'where'
+    ];
+    
+    const hasGeneralTopic = generalTopics.some(topic => 
+      question.toLowerCase().includes(topic)
+    );
+    
+    if (hasGeneralTopic) {
+      console.log("Detected general HR topic, sending to AI");
+      // Let AI handle general HR questions
+    }
+    
+    // Try to provide helpful response for unclear questions
+    const lowerQuestion = question.toLowerCase();
+    if (lowerQuestion.includes('employee') || lowerQuestion.includes('worker') || lowerQuestion.includes('staff')) {
+      return {
+        success: true,
+        message: "Employee guidance provided",
+        data: {
+          question,
+          answer: `🤔 **Hmm, I think you're asking about your team, but I'm not quite sure what you need!**
 
-📝 **Employee Management:**
-• Adding new employees
-• Updating employee information
-• Finding employee details
-• Managing departments
+**Here are some friendly ways to ask:**
+• "Tell me about [employee name]"
+• "Show me all my team members"
+• "How do I add someone new to the team?"
+• "I want to find [employee name]"
 
-💰 **Payroll & Attendance:**
-• Understanding salary calculations
-• Checking attendance records
-• Managing overtime
-• Holiday management
+**I can help you with:**
+• Finding team members
+• Adding new people
+• Managing your team
+• Checking employee info
 
-🔍 **To search for employees:**
-• Use the search bar in the Employees section
-• Ask me directly: "Tell me about employee [Name]"
-• Filter by department using the dropdown
-
-**Need help with something specific?** Just ask me about any HR task!`,
-        timestamp: new Date().toISOString()
-      }
-    };
+**💡 Just ask me in your own words - I'm pretty good at understanding! 😊**`,
+          timestamp: new Date().toISOString()
+        }
+      };
+    }
+    
+    // Regular chatbot request - let AI handle any question
+    console.log("Using AI response for general questions");
+    const response = await api.post("/chatbot", { question });
+    console.log("Chatbot response:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Chatbot service error details:", {
       message: error.message,
@@ -327,11 +447,40 @@ That's it! The employee is now in the system.`,
       config: error.config
     });
     
-    // Show the actual error message from backend
-    const backendError = error.response?.data?.message || error.response?.data?.error || error.message;
-    console.error("Backend error message:", backendError);
+    // Provide helpful response instead of throwing error
+    const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message;
+    console.error("Backend error message:", errorMessage);
     
-    throw new Error(backendError || "Failed to get response from chatbot");
+    // Return helpful response instead of throwing error
+    return {
+      success: true,
+      message: "Helpful guidance provided",
+      data: {
+        question,
+        answer: `👋 **Hi there! I'm your friendly HR assistant!** 
+
+Oops! It seems I got a bit confused with your request. No worries though! 😊
+
+Here are some fun things I can help you with:
+
+**👥 Employee Stuff:**
+• "Tell me about [employee name]" 
+• "How do I add someone new?"
+• "Show me all my team members"
+
+**💰 Money & Time:**
+• "How does overtime work?"
+• "What are the attendance rules?"
+• "How do I check payroll?"
+
+**🏢 Team Organization:**
+• "How do I create a new department?"
+• "How do I move people between teams?"
+
+**💡 Pro tip:** Try asking your question in a different way, or pick one of the quick questions above! I'm here to make your HR life easier! ✨`,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
 
