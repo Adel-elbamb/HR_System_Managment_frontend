@@ -65,6 +65,7 @@ const Holiday = () => {
 
   // Delete holiday
   const handleDelete = async (id) => {
+    console.log(id);
     setLoading(true);
     setError("");
     try {
