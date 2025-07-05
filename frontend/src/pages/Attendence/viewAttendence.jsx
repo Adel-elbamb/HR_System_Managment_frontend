@@ -5,9 +5,15 @@ export default function ViewAttendence({ isOpen, onClose, data }) {
   if (!isOpen) return null;
 
   return (
-<div className={styles.modalOverlay}>
-      <div className={styles.modal}>
-        <h3 className={`${styles.heading } `}>Attendance Details</h3>
+    <div
+      className={styles.modalOverlay}
+      onClick={onClose} 
+    >
+      <div
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()} 
+      >
+        <h3 className={styles.heading}>Attendance Details</h3>
 
         <div className="mb-3">
           <strong className="text-primary">Employee:</strong>{" "}
@@ -19,22 +25,26 @@ export default function ViewAttendence({ isOpen, onClose, data }) {
         </div>
 
         <div className="mb-3">
-          <strong className="text-primary">Check-in Time:</strong> {data?.checkInTime || "-"}
+          <strong className="text-primary">Check-in Time:</strong>{" "}
+          {data?.checkInTime || "-"}
         </div>
 
         <div className="mb-3">
-          <strong className="text-primary">Check-out Time:</strong> {data?.checkOutTime || "-"}
+          <strong className="text-primary">Check-out Time:</strong>{" "}
+          {data?.checkOutTime || "-"}
         </div>
 
         <div className="mb-3">
           <strong className="text-primary">Status:</strong> {data?.status}
         </div>
 
-<button onClick={onClose} className={`${styles.closeBtn} btn btn-primary`}>
+        <button
+          onClick={onClose}
+          className={`${styles.closeBtn} btn btn-primary`}
+        >
           Close
         </button>
       </div>
     </div>
   );
 }
-

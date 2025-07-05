@@ -68,8 +68,14 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   };
 
   return (
-    <div className={style.modalOverlay}>
-      <div className={style.modal}>
+    <div
+      className={style.modalOverlay}
+      onClick={onClose} 
+    >
+      <div
+        className={style.modal}
+        onClick={(e) => e.stopPropagation()} 
+      >
         <h3 className={style.heading}>
           {initialData ? "Edit Attendance" : "Add Attendance"}
         </h3>
@@ -79,7 +85,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
             type="text"
             className={style.input}
             value={
-              employees.find((emp) => emp._id === employeeId)?.name 
+              employees.find((emp) => emp._id === employeeId)?.name
             }
             disabled
           />

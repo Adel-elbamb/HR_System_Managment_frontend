@@ -48,6 +48,14 @@ export default function Attendence() {
     fetchAttendence();
   }, []);
 
+  useEffect(() => {
+    if (employeeName.trim() === "") {
+      setFilteredAttendence(attendence);
+      setErrors((prev) => ({ ...prev, employeeName: "" }));
+      setCurrentPage(0);
+    }
+  }, [employeeName, attendence]);
+
   const handleAdd = () => {
     setSelectedAttendence(null);
     setShowModal(true);
@@ -87,15 +95,32 @@ export default function Attendence() {
     }
   };
 
-  const applyDateFilter = async () => {
-    const newErrors = {};
+  const handleSearchByName = async () => {
+    const trimmedName = employeeName.trim();
 
-    if (!start && !end) {
-      newErrors.fromDate = "At least one  is required";
+    if (trimmedName === "") {
+      setFilteredAttendence(attendence);
+      setErrors((prev) => ({ ...prev, employeeName: "" }));
+      setCurrentPage(0);
+      return;
     }
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    try {
+      const data = await getAttendencesByEmployeeName(trimmedName);
+      setFilteredAttendence(data || []);
+      setErrors((prev) => ({ ...prev, employeeName: "" }));
+      setCurrentPage(0);
+    } catch (error) {
+      console.error("Search failed:", error);
+      setFilteredAttendence([]);
+    }
+  };
+
+  const applyDateFilter = async () => {
+    if (!start && !end) {
+      setFilteredAttendence(attendence);
+      setErrors((prev) => ({ ...prev, fromDate: "", toDate: "" }));
+      setCurrentPage(0);
       return;
     }
 
@@ -117,21 +142,13 @@ export default function Attendence() {
     }
   };
 
-  const handleSearchByName = async () => {
-    if (!employeeName.trim()) {
-      setErrors({ employeeName: "Employee name is required" });
-      return;
-    }
-
-    try {
-      const data = await getAttendencesByEmployeeName(employeeName);
-      setFilteredAttendence(data || []);
-      setErrors({});
-      setCurrentPage(0);
-    } catch (error) {
-      console.error("Search failed:", error);
-      setFilteredAttendence([]);
-    }
+  const resetFilters = () => {
+    setStart("");
+    setEnd("");
+    setEmployeeName("");
+    setFilteredAttendence(attendence);
+    setErrors({});
+    setCurrentPage(0);
   };
 
   const formatDate = (rawDate) => {
@@ -173,9 +190,6 @@ export default function Attendence() {
               <i className="bi bi-search"></i>
             </button>
           </div>
-          <div style={{ minHeight: "18px" }}>
-            {errors.employeeName && <small className="text-danger">{errors.employeeName}</small>}
-          </div>
         </div>
       </div>
 
@@ -190,11 +204,6 @@ export default function Attendence() {
               onChange={(e) => setStart(e.target.value)}
             />
           </div>
-          {errors.fromDate && (
-            <div style={{ position: "absolute", top: "100%", left: 0 }}>
-              <small className="text-danger">{errors.fromDate}</small>
-            </div>
-          )}
         </div>
 
         <div className="position-relative" style={{ width: "170px" }}>
@@ -207,11 +216,6 @@ export default function Attendence() {
               onChange={(e) => setEnd(e.target.value)}
             />
           </div>
-          {errors.toDate && (
-            <div style={{ position: "absolute", top: "100%", left: 0 }}>
-              <small className="text-danger">{errors.toDate}</small>
-            </div>
-          )}
         </div>
 
         <button
@@ -223,6 +227,13 @@ export default function Attendence() {
         </button>
 
         <button
+          className="btn btn-secondary btn-sm rounded-pill"
+          onClick={resetFilters}
+        >
+          <i className="bi bi-x-lg me-1"></i> 
+        </button>
+
+        <button
           className="btn btn-primary btn-sm rounded-pill"
           onClick={handleAdd}
         >
@@ -231,8 +242,8 @@ export default function Attendence() {
       </div>
 
       <div className="table-responsive mt-4">
-        <table className="table  table-striped">
-          <thead className="">
+        <table className="table table-striped">
+          <thead>
             <tr>
               <th className="text-center">Employee</th>
               <th className="text-center">Date</th>
@@ -255,31 +266,13 @@ export default function Attendence() {
                   <td className="text-center">{att.checkInTime || "-"}</td>
                   <td className="text-center">{att.checkOutTime || "-"}</td>
                   <td className="text-center">{att.status || "N/A"}</td>
-                  <td className="text-center ">
-                    <i
-                      className="fas fa-eye text-muted me-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleView(att._id)}
-                    ></i>
-                    <i
-                      className="fas fa-edit text-secondary me-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleEdit(att)}
-                    ></i>
-                    <i
-                      className="fas fa-trash text-danger me-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleDelete(att._id)}
-                    ></i>
+                  <td className="text-center">
+                    <i className="fas fa-eye text-muted me-2" style={{ cursor: "pointer" }} onClick={() => handleView(att._id)}></i>
+                    <i className="fas fa-edit text-secondary me-2" style={{ cursor: "pointer" }} onClick={() => handleEdit(att)}></i>
+                    <i className="fas fa-trash text-danger me-2" style={{ cursor: "pointer" }} onClick={() => handleDelete(att._id)}></i>
                   </td>
                 </tr>
               ))
-            ) : employeeName.trim() !== "" ? (
-              <tr>
-                <td colSpan="6" className="text-center text-danger">
-                  Employee not found
-                </td>
-              </tr>
             ) : (
               <tr>
                 <td colSpan="6" className="text-center text-muted">
