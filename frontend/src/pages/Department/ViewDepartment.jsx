@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Modal } from "react-bootstrap";
-import Button from "./../../../components/common/Button";
-import axiosInstance from "./../../../services/axiosInstance"; // Import the custom axios instance
+import Button from "../../components/common/Button";
+import axiosInstance from "../../services/axiosInstance"; // Import the custom axios instance
 import styles from "./ViewDepartment.module.css";
 
 function Department() {

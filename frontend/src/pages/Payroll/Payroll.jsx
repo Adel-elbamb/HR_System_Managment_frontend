@@ -1,185 +1,303 @@
-import { useState, useEffect } from "react";
-import { Container, Row, Col, Table, Form } from "react-bootstrap";
-import Button from "./../../components/common/Button";
-import axiosInstance from "./../../services/axiosInstance"; 
+import React, { useEffect, useState, useCallback } from "react";
+import { Container, Row, Col, Table, Alert } from "react-bootstrap";
+import ReactPaginate from 'react-paginate';
+import { debounce } from "lodash";
+import axiosInstance from "./../../services/axiosInstance";
+import ViewPayroll from "./ViewPayroll";
 import styles from "./Payroll.module.css";
 
 function Payroll() {
-  const [payroll, setPayroll] = useState(null);
-  const [filteredPayroll, setFilteredPayroll] = useState(null);
+  const [payroll, setPayroll] = useState([]);
+  const [filteredPayroll, setFilteredPayroll] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [viewPayroll, setViewPayroll] = useState(false);
+  const [viewData, setViewData] = useState(null);
+  const itemsPerPage = 5;
+
+  const offset = currentPage * itemsPerPage;
+  const currentItems = filteredPayroll.slice(offset, offset + itemsPerPage);
 
   // Fetch payroll data
+  const fetchPayroll = async () => {
+    try {
+      const response = await axiosInstance.get(`/payroll`);
+      const payrollData = response.data.data.payroll || [];
+      setPayroll(payrollData);
+      setFilteredPayroll(payrollData);
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch salary records");
+      setPayroll([]);
+      setFilteredPayroll([]);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    axiosInstance
-      .get("/payroll")
-      .then((response) => {
-        console.log("API Data:", response.data);
-        const payrollData = response.data.data.payroll || [];
-        setPayroll(payrollData);
-        setFilteredPayroll(payrollData);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    fetchPayroll();
   }, []);
 
-  // Filter payroll data based on search term and date
-  useEffect(() => {
-    if (!payroll) return;
-
-    const filtered = payroll.filter((record) => {
-      const fullName = record.employeeId
-        ? `${record.employeeId.firstName} ${record.employeeId.lastName}`.toLowerCase()
-        : "";
-      const matchesName = fullName.includes(searchTerm.toLowerCase());
-
-      let matchesDate = true;
-      if (selectedMonth || selectedYear) {
-        const recordDate = new Date(record.date);
-        const recordMonth = recordDate.getMonth() + 1; // Months are 0-based in JS
-        const recordYear = recordDate.getFullYear();
-        matchesDate =
-          (!selectedMonth || recordMonth === parseInt(selectedMonth)) &&
-          (!selectedYear || recordYear === parseInt(selectedYear));
+  // Debounced search handler
+  const handleSearch = useCallback(
+    debounce((value) => {
+      const trimmedName = value.trim();
+      if (trimmedName === "") {
+        setFilteredPayroll(payroll);
+        setCurrentPage(0);
+        return;
       }
 
-      return matchesName && matchesDate;
-    });
+      const filtered = payroll.filter((record) =>
+        record.employeeId &&
+        `${record.employeeId.firstName || ""} ${record.employeeId.lastName || ""}`
+          .toLowerCase()
+          .includes(trimmedName.toLowerCase())
+      );
+      setFilteredPayroll(filtered);
+      setCurrentPage(0);
+    }, 500),
+    [payroll]
+  );
 
-    setFilteredPayroll(filtered);
-  }, [payroll, searchTerm, selectedMonth, selectedYear]);
+  // Update search term and trigger search
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    handleSearch(value);
+  };
+
+  // Debounced date filter handler
+  const applyDateFilter = useCallback(
+    debounce(async () => {
+      if (!fromDate && !toDate) {
+        setFilteredPayroll(payroll);
+        setCurrentPage(0);
+        setError(null);
+        return;
+      }
+
+      // Validate dates
+      if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+        setError("From date cannot be later than To date");
+        setFilteredPayroll([]);
+        return;
+      }
+
+      try {
+        // Transform dates to YYYY-MM format (adjust if backend expects YYYY-MM-DD)
+        const from = fromDate ? fromDate.slice(0, 7) : "";
+        const to = toDate ? toDate.slice(0, 7) : "";
+        const queryParams = new URLSearchParams({
+          ...(from && { from }),
+          ...(to && { to }),
+        });
+
+        const response = await axiosInstance.get(`/payroll?${queryParams}`);
+        const filteredData = response.data.data.payroll || [];
+        setFilteredPayroll(filteredData);
+        setCurrentPage(0);
+        setError(null); // Clear error on success
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to fetch filtered salary records");
+        setFilteredPayroll([]);
+      }
+    }, 500),
+    [fromDate, toDate, payroll]
+  );
+
+  // Reset filters
+  const resetFilters = () => {
+    setSearchTerm("");
+    setFromDate("");
+    setToDate("");
+    setFilteredPayroll(payroll);
+    setCurrentPage(0);
+    setError(null);
+  };
+
+  // Fetch single payroll record for view
+  const handleView = async (id) => {
+    try {
+      setViewPayroll(false);
+      setViewData(null);
+      const response = await axiosInstance.get(`/payroll/${id}`);
+      const payrollData = response.data.data.payroll;
+      if (!payrollData) {
+        throw new Error("No payroll data found");
+      }
+      setViewData(payrollData);
+      setViewPayroll(true);
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch salary details");
+      setViewPayroll(false);
+      setViewData(null);
+    }
+  };
+
+  // Handle pagination
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!filteredPayroll || filteredPayroll.length === 0) return <div>No payroll data found.</div>;
-
-  // Generate year options (last 5 years)
-  const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
   return (
-    <div className={styles.pageBackground}>
-      <Container className={styles.payrollContainer}>
-        <Row className={`${styles.header} align-items-center mb-4`}>
-          <Col>
-            <h2 className={styles.title}>Payroll Management</h2>
-            <p className={`${styles.subtitle} text-muted`}>Manage employee payroll records.</p>
-          </Col>
-          <Col xs="auto">
-            <Button
-              variant="primary"
-              size="sm"
-              className={styles.addButton}
-            >
-              + Add Payroll Record
-            </Button>
-          </Col>
-        </Row>
-        <Row className="mb-4">
-          <Col>
-            <Form>
-              <Row>
-                <Col md={4}>
-                  <Form.Group controlId="searchName">
-                    <Form.Control
-                      type="text"
-                      placeholder="Search by employee name"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className={styles.searchInput}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group controlId="searchMonth">
-                    <Form.Select
-                      value={selectedMonth}
-                      onChange={(e) => setSelectedMonth(e.target.value)}
-                      className={styles.searchInput}
-                    >
-                      <option value="">Select Month</option>
-                      <option value="1">January</option>
-                      <option value="2">February</option>
-                      <option value="3">March</option>
-                      <option value="4">April</option>
-                      <option value="5">May</option>
-                      <option value="6">June</option>
-                      <option value="7">July</option>
-                      <option value="8">August</option>
-                      <option value="9">September</option>
-                      <option value="10">October</option>
-                      <option value="11">November</option>
-                      <option value="12">December</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group controlId="searchYear">
-                    <Form.Select
-                      value={selectedYear}
-                      onChange={(e) => setSelectedYear(e.target.value)}
-                      className={styles.searchInput}
-                    >
-                      <option value="">Select Year</option>
-                      {yearOptions.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-              </Row>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Table responsive className={styles.payrollTable}>
-              <thead>
-                <tr>
-                  <th>Employee Name</th>
-                  <th>Salary</th>
-                  <th>Bonus</th>
-                  <th>Deduction</th>
-                  <th>Days of Absence</th>
-                  <th>Hourly Discount</th>
-                  <th>Net Salary</th>
-                  <th>Actions</th>
+    <div className="container shadow-sm p-4 mb-5 bg-body-tertiary rounded mt-5">
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3">
+        <div>
+          <h3>Employee Records Management</h3>
+          <p className="text-muted mb-0">View and filter employee salary records</p>
+        </div>
+        <div className="col-md-3 ms-auto">
+          <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
+            <span className="input-group-text fw-semibold text-primary bg-transparent border-0">Employee</span>
+            <input
+              type="text"
+              className="form-control form-control-sm bg-transparent border-0"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="Enter employee name..."
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex align-items-center flex-wrap gap-2" style={{ maxWidth: "1000px", marginTop: "20px", marginLeft: "200px" }}>
+        <div className="position-relative" style={{ width: "170px" }}>
+          <div className="input-group input-group-sm rounded-pill shadow-sm">
+            <span className="input-group-text bg-white border-0 text-primary fw-semibold">From</span>
+            <input
+              type="date"
+              className="form-control border-0"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="position-relative" style={{ width: "170px" }}>
+          <div className="input-group input-group-sm rounded-pill shadow-sm">
+            <span className="input-group-text bg-white border-0 text-primary fw-semibold">To</span>
+            <input
+              type="date"
+              className="form-control border-0"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <button
+          className="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+          style={{ height: "34px", width: "34px" }}
+          onClick={applyDateFilter}
+        >
+          <i className="bi bi-filter"></i>
+        </button>
+
+        <button
+          className="btn btn-secondary btn-sm rounded-pill"
+          onClick={resetFilters}
+        >
+          <i className="bi bi-x-lg me-1"></i> Reset
+        </button>
+      </div>
+
+      {error && (
+        <Alert variant="danger" className="mt-4">
+          {error}
+        </Alert>
+      )}
+      {!error && currentItems.length === 0 && (
+        <Alert variant="info" className="mt-4">
+          No salary records found for the selected filters. Try adjusting your search or date range.
+        </Alert>
+      )}
+      {currentItems.length > 0 && (
+        <div className="table-responsive mt-4">
+          <Table striped>
+            <thead>
+              <tr>
+                <th className="text-center">Employee Name</th>
+                <th className="text-center">Month/Year</th>
+                <th className="text-center">Bonus</th>
+                <th className="text-center">Deduction</th>
+                <th className="text-center">Days of Absence</th>
+                <th className="text-center">Hourly Discount</th>
+                <th className="text-center">Net Salary</th>
+                <th className="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((record) => (
+                <tr key={record._id}>
+                  <td className="text-center">
+                    {record.employeeId
+                      ? `${record.employeeId.firstName || ""} ${record.employeeId.lastName || ""}`
+                      : "N/A"}
+                  </td>
+                  <td className="text-center">{`${record.month}/${record.year}`}</td>
+                  <td className="text-center">
+                    {record.totalBonusAmount ? `$${record.totalBonusAmount.toFixed(2)}` : "$0.00"}
+                  </td>
+                  <td className="text-center">
+                    {record.totalDeductionAmount ? `$${record.totalDeductionAmount.toFixed(2)}` : "$0.00"}
+                  </td>
+                  <td className="text-center">{record.absentDays || 0}</td>
+                  <td className="text-center">
+                    {record.totalOvertime ? `$${record.totalOvertime.toFixed(2)}/hr` : "$0.00/hr"}
+                  </td>
+                  <td className="text-center">
+                    {record.netSalary ? `$${record.netSalary.toFixed(2)}` : "$0.00"}
+                  </td>
+                  <td className="text-center">
+                    <i
+                      className="bi bi-eye text-muted"
+                      style={{ cursor: "pointer", fontSize: "1.2rem" }}
+                      onClick={() => handleView(record._id)}
+                    ></i>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredPayroll.map((record) => (
-                  <tr key={record._id} className={styles.tableRow}>
-                    <td>
-                      {record.employeeId
-                        ? `${record.employeeId.firstName} ${record.employeeId.lastName}`
-                        : "N/A"}
-                    </td>
-                    <td>{record.salary || "N/A"}</td>
-                    <td>{record.totalBonusAmount || 0}</td>
-                    <td>{record.totalDeduction || 0}</td>
-                    <td>{record.absentDays || 0}</td>
-                    <td>{record.totalOvertime ? `$${record.totalOvertime}/hr` : "$0/hr"}</td>
-                    <td>{record.netSalary ? `$${record.netSalary.toFixed(2)}` : "$0.00"}</td>
-                    <td>
-                      <span className={`${styles.actionIcon} me-2`}>✎</span>
-                      <span className={styles.actionIcon}>🗑</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-      </Container>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      )}
+
+      <ReactPaginate
+        previousLabel={"«"}
+        nextLabel={"»"}
+        breakLabel={"..."}
+        pageCount={Math.ceil(filteredPayroll.length / itemsPerPage)}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-end mb-2"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item disabled"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
+
+      {viewPayroll && (
+        <ViewPayroll
+          isOpen={viewPayroll}
+          onClose={() => {
+            setViewPayroll(false);
+            setViewData(null);
+          }}
+          data={viewData}
+        />
+      )}
     </div>
   );
 }

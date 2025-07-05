@@ -11,7 +11,7 @@ import EditEmployee from '../pages/Employees/EditEmployee';
 import EmployeeDetails from '../pages/Employees/ViewEmployee';
 import Login from '../pages/Login/Login';
 import ProtectedRoute from './ProtectedRoute';
-import Department from '../pages/Department/ViewDepartments/ViewDepartment';
+import Department from '../pages/Department/ViewDepartment';
 import Payroll from '../pages/Payroll/Payroll';
 import Attendence from '../pages/Attendence/Attendence';
 import AddAttendence from '../pages/Attendence/AddAttendence';
