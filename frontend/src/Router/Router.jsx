@@ -13,6 +13,8 @@ import Login from '../pages/Login/Login';
 import ProtectedRoute from './ProtectedRoute';
 import Department from '../pages/Department/ViewDepartments/ViewDepartment';
 import Payroll from '../pages/Payroll/Payroll';
+import Attendence from '../pages/Attendence/Attendence';
+import AddAttendence from '../pages/Attendence/AddAttendence';
 import Holiday from '../pages/Holiday/Holiday';
 
 const router = createBrowserRouter([
@@ -35,6 +37,8 @@ const router = createBrowserRouter([
           { path: '/employee/:id', element: <EmployeeDetails /> },
           { path: '/departments', element: <Department /> },
           { path: '/payroll', element: <Payroll /> },
+          {path:'attendance',element:<Attendence/>},
+          {path:'addattendence',element:<AddAttendence/>},
           { path: '/holidays', element: <Holiday /> },
         ],
       },
