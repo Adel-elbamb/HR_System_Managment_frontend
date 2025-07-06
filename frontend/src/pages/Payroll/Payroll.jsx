@@ -122,11 +122,12 @@ function Payroll() {
 
   // Fetch single payroll record for view
   const handleView = async (id) => {
+      console.log("🔍 Fetching payroll for ID:", id); // ← أضف هذا
     try {
       setViewPayroll(false);
       setViewData(null);
       const response = await axiosInstance.get(`/payroll/${id}`);
-      const payrollData = response.data.data.payroll;
+      const payrollData = response.data.data.payRoll;
       if (!payrollData) {
         throw new Error("No payroll data found");
       }
