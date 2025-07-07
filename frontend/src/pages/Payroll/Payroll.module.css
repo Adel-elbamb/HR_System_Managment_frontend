@@ -1,0 +1,262 @@
+.pageBackground {
+    background-color: #f4f6f8;
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+  
+  .payrollContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    color: #7f8c8d;
+  }
+  
+  .searchInput {
+    border: 1px solid #d1d9e0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #f9fafb;
+  }
+  
+  .searchInput::placeholder {
+    color: #a0a8b0;
+    font-style: italic;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+    background: #ffffff;
+  }
+  
+  .clearButton {
+    background-color: #7f8c8d;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  .clearButton:hover {
+    background-color: #6c757d;
+  }
+  
+  .payrollTable {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .payrollTable th,
+  .payrollTable td {
+    padding: 1rem;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+  
+  .payrollTable th {
+    background-color: #3498db;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  .payrollTable tbody tr {
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+  }
+  
+  .tableRow:hover {
+    background-color: #f1f5f9;
+  }
+  
+  .actionIcon {
+    font-size: 1.2rem;
+    color: #3498db;
+    transition: color 0.2s ease;
+  }
+  
+  .actionIcon:hover {
+    color: #2980b9;
+  }
+  
+  @media (max-width: 768px) {
+    .searchInput {
+      margin-bottom: 1rem;
+    }
+  
+    .payrollTable th,
+    .payrollTable td {
+      font-size: 0.85rem;
+      padding: 0.75rem;
+    }
+  
+    .title {
+      font-size: 1.5rem;
+    }
+  
+    .subtitle {
+      font-size: 0.9rem;
+    }
+  }
+
+
+  .modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal {
+  background: #fff;
+  padding: 0;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.modalHeader {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.modalHeader h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  text-align: center;
+}
+
+.modalContent {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.detailValue {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  margin-top: 0.25rem;
+}
+
+.modalFooter {
+  padding: 1rem 2rem;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closeBtn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.closeBtn:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal {
+    width: 90%;
+    margin: 1rem;
+  }
+
+  .modalHeader {
+    padding: 1rem;
+  }
+
+  .modalContent {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .modalFooter {
+    padding: 0.75rem 1rem;
+  }
+
+  .closeBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
