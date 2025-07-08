@@ -1,0 +1,125 @@
+.container {
+  padding: 32px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  max-width: none;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 100%);
+  color: #fff;
+  padding: 28px 36px 18px 36px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.headerIcon {
+  font-size: 2.2rem;
+  background: #fff;
+  color: #1a2233;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.headerTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+}
+
+.headerSubtitle {
+  font-size: 1.13rem;
+  color: #e0f2fe;
+  font-weight: 400;
+}
+
+.table {
+  width: 100%;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.table th, .table td {
+  white-space: nowrap;
+  text-align: left;
+}
+
+.table th {
+  color: #1a2233;
+  font-weight: 600;
+  width: 180px;
+  padding: 10px 16px 10px 32px;
+  background: none;
+  border: none;
+}
+
+.table td {
+  padding: 10px 16px 10px 0;
+  background: #f4f6fa;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.08rem;
+}
+
+.table tr {
+  transition: background 0.15s;
+}
+
+.table tr:hover td {
+  background: #e9ecf3;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: #e9ecf3;
+  color: #1a2233;
+  margin-right: 6px;
+}
+
+.actionBtn {
+  background: #fff;
+  color: #1a2233;
+  border: 2px solid #1a2233;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.actionBtn:hover {
+  background: #1a2233;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .card { padding: 0; }
+  .header { flex-direction: column; align-items: flex-start; padding: 18px 12px 10px 12px; }
+  .headerTitle { font-size: 1.2rem; }
+  .table th, .table td { padding: 8px 8px 8px 12px; font-size: 0.98rem; }
+} 
