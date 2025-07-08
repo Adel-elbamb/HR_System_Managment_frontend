@@ -371,12 +371,11 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
     <div className={styles.pageBackground}>
       <div className={styles.centerCard}>
         <div className={styles.headerRow}>
-         
+        <h3 className="mb-0 h4 text-center text-dark">Add Employee</h3>
+
         </div>
         <div className="card shadow border-0 rounded-3">
-          <div className="card-header text-center bg-secondary-subtle text-white d-flex align-items-center ">
-            <h3 className="mb-0 h4 text-center text-dark">Add Employee</h3>
-          </div>
+         
           <div className="card-body p-4">
             {error && (
               <div className="alert alert-danger alert-dismissible fade show" role="alert">

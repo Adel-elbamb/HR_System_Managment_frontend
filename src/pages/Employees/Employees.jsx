@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAllEmployees, deleteEmployee, updateEmployee, getEmployeeById } from "../../services/employee.services";
 import AddEmployee from "./AddEmployee";
 import { useNavigate } from "react-router-dom";
-
-
+import styles from "./Employees.module.css";
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -13,7 +12,6 @@ const Employees = () => {
   const navigate = useNavigate();
   
   const [searchTerm, setSearchTerm] = useState("");
-
   const [dateFilter, setDateFilter] = useState("");
   
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,82 +77,62 @@ const Employees = () => {
     setDateFilter("");
   };
   return (
-    <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 className="fw-bold">Employee Management</h2>
-          <p className="text-muted">Manage your employees, view profiles, and track performance.</p>
-        </div>
-        <div>
-          <button className="btn btn-secondary me-2" onClick={() => navigate("/deleted-employees")}>
-            View Deleted Employees
-          </button>
-        <button className="btn btn-primary " onClick={() => navigate("/add-employee")}>
-            Add Employee
-          </button>
-        </div>
-      </div>
-  
-      <div className="card mb-4 rounded-4 shadow-sm">
-        <div className="card-body">
-          <div className="row g-3">
-            <div className="col-md-4">
-              <label className="form-label fw-semibold">Search by Name:</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter employee name..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="col-md-4">
-              <label className="form-label fw-semibold">Filter by Date:</label>
-              <input
-                type="date"
-                className="form-control"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-              />
-            </div>
-            <div className="col-md-4 d-flex align-items-end">
-              <button className="btn btn-outline-secondary w-100" onClick={clearFilters}>
-                Clear Filters
-              </button>
-            </div>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <div>
+            <div className={styles.headerTitle}>Employee Management</div>
+            <div className={styles.headerSubtitle}>Manage your employees, view profiles, and track performance.</div>
+          </div>
+          <div className={styles.buttonGroup}>
+            <button className={styles.actionBtn} onClick={() => navigate("/deleted-employees")}>View Deleted Employees</button>
+            <button className={styles.actionBtn} onClick={() => navigate("/add-employee")}>Add Employee</button>
           </div>
         </div>
-      </div>
-  
-  
-      <div className="card shadow-sm rounded-4">
-        <div className="card-body">
-          <div className="mb-3 text-muted small">
-            <h4>Employees</h4>
+        <div style={{ padding: 32 }}>
+          <div className={styles.searchGroup}>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <input
+              type="date"
+              className={styles.dateInput}
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+            />
+            <button className={styles.clearBtn} onClick={clearFilters}>
+              Clear Filters
+            </button>
           </div>
-  
-          <div className="table-responsive">
-            <table className="table table-hover table-borderless align-middle">
-              <thead className="table-light">
+          <div style={{ marginBottom: 16, color: '#888', fontSize: 14 }}>
+            <h4 style={{ color: '#1a2233', marginBottom: 0 }}>Employees</h4>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <th className="text-center">Name</th>
-                  <th className="text-center">Department</th>
-                  <th className="text-center">Hiring Date</th>
-                  <th className="text-center">Phone</th>
-                  <th className="text-center">Email</th>
-                  <th className="text-center">Action</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Hiring Date</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="6" style={{ textAlign: 'center' }}>
                       Loading...
                     </td>
                   </tr>
                 ) : currentEmployees.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center text-muted">
+                    <td colSpan="6" style={{ textAlign: 'center', color: '#888' }}>
                       {filteredEmployees.length === 0
                         ? "No employees match your search criteria."
                         : "No employees found."}
@@ -163,36 +141,33 @@ const Employees = () => {
                 ) : (
                   currentEmployees.map((emp) => (
                     <tr key={emp._id}>
-                      <td className="text-capitalize text-center">{emp.name}</td>
-                      <td className="text-capitalize text-center">{emp.department}</td>
+                      <td className="text-capitalize">{emp.name}</td>
+                      <td><span className={styles.badge}>{emp.department}</span></td>
                       <td>{emp.hiringDate || emp.createdAt?.slice(0, 10)}</td>
+                      <td>{emp.phone}</td>
+                      <td>{emp.email}</td>
                       <td>
-                          {emp.phone}
-                        
-                      </td>
-                      <td className="text-center">{emp.email}</td>
-                      <td>
-                        <div className="d-flex gap-2 align-items-center">
+                        <div className={styles.actionBtns}>
                           <button
-                            className="btn btn-sm btn-light border"
+                            className={`${styles.actionBtnTable} ${styles.view}`}
                             title="View"
                             onClick={() => navigate(`/employee/${emp._id}`)}
                           >
-                            <i className="fas fa-eye text-muted"></i>
+                            <i className="fas fa-eye"></i>
                           </button>
                           <button
-                            className="btn btn-sm btn-light border"
+                            className={`${styles.actionBtnTable} ${styles.edit}`}
                             title="Edit"
                             onClick={() => navigate(`/edit-employee/${emp._id}`)}
                           >
-                            <i className="fas fa-edit text-secondary"></i>
+                            <i className="fas fa-edit"></i>
                           </button>
                           <button
-                            className="btn btn-sm btn-light border"
+                            className={`${styles.actionBtnTable} ${styles.delete}`}
                             title="Delete"
                             onClick={() => handleDelete(emp._id)}
                           >
-                            <i className="fas fa-trash text-danger"></i>
+                            <i className="fas fa-trash"></i>
                           </button>
                         </div>
                       </td>
@@ -202,56 +177,38 @@ const Employees = () => {
               </tbody>
             </table>
           </div>
-  
           {!loading && totalPages > 1 && (
-            <nav className="d-flex justify-content-center mt-4">
-              <ul className="pagination">
-                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                  <button className="page-link bg-secondary text-light" onClick={() => handlePageChange(currentPage - 1)}>
-                    Previous
-                  </button>
-                </li>
-  
-                {[...Array(totalPages)].map((_, i) => {
-                  const page = i + 1;
-                  if (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 1 && page <= currentPage + 1)
-                  ) {
-                    return (
-                      <li key={page} className={`page-item ${currentPage === page ? "active" : ""}`}>
-                        <button className="page-link bg-white text-dark" onClick={() => handlePageChange(page)}>
-                          {page}
-                        </button>
-                      </li>
-                    );
-                  } else if (
-                    (page === currentPage - 2 && page > 1) ||
-                    (page === currentPage + 2 && page < totalPages)
-                  ) {
-                    return (
-                      <li key={page} className="page-item disabled">
-                        <span className="page-link">...</span>
-                      </li>
-                    );
-                  }
-                  return null;
-                })}
-  
-                <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                  <button className="page-link bg-secondary text-light" onClick={() => handlePageChange(currentPage + 1)}>
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            <div className={styles.pagination}>
+              <button
+                className={styles.pageBtn}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={`${styles.pageBtn} ${currentPage === i + 1 ? styles.active : ""}`}
+                  onClick={() => handlePageChange(i + 1)}
+                  disabled={currentPage === i + 1}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                className={styles.pageBtn}
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-  
 };
 
 export default Employees;

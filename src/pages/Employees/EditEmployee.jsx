@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getEmployeeById, updateEmployee, getAllDepartments } from "../../services/employee.services";
+import styles from "./EditEmployee.module.css";
+import Select from 'react-select';
+import ErrorDisplay from '../../components/common/ErrorDisplay';
 
 function filterEditableFields(data) {
   const allowed = [
@@ -292,232 +295,332 @@ const EditEmployee = () => {
     }
   };
 
-  if (loading || !form) return <div style={{ padding: 24 }}>Loading...</div>;
+  if (loading || !form) return <div className={styles.loading}>Loading...</div>;
+
+  // Gender, overtimeType, deductionType options
+  const genderOptions = [
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' }
+  ];
+  const overtimeTypeOptions = [
+    { value: 'hr', label: 'Hour' },
+    { value: 'pound', label: 'Pound' }
+  ];
+  const deductionTypeOptions = [
+    { value: 'hr', label: 'Hour' },
+    { value: 'pound', label: 'Pound' }
+  ];
+  const departmentOptions = departments.map(dept => ({ value: dept._id, label: dept.departmentName }));
+
+  const customSelectStyles = {
+    control: (base, state) => ({
+      ...base,
+      minHeight: 52,
+      height: 52,
+      borderRadius: 8,
+      borderColor: state.isFocused ? '#28a1de' : '#111',
+      boxShadow: 'none',
+      '&:hover': { borderColor: '#28a1de' },
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      height: 52,
+      padding: '0 12px',
+    }),
+    input: (base) => ({
+      ...base,
+      margin: 0,
+      color: '#111',
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: '#111',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#111',
+      fontSize: '1rem',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      left: 16,
+      position: 'absolute',
+    }),
+  };
 
   return (
-    <div className="container-fluid mt-4">
-      <div className="card shadow-sm p-4">
-        <h3 className="card-title mb-4">Edit Employee</h3>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="row g-3">
-            <div className="col-md-6">
-              {fieldErrors.firstName && <small className="text-danger">{fieldErrors.firstName}</small>}
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <div className={styles.headerTitle}>Edit Employee</div>
+          <div className={styles.headerSubtitle}>Update employee details and save changes.</div>
+        </div>
+        {error && <div className={styles.error}>{error}</div>}
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.formGrid}>
+            {/* First Name */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.firstName} />
               <input
                 name="firstName"
-                placeholder="First Name"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.firstName || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.firstName ? 'is-invalid' : ''}`}
               />
+              <label className={styles.outlinedLabel}>First Name</label>
             </div>
-            <div className="col-md-6">
-              {fieldErrors.lastName && <small className="text-danger">{fieldErrors.lastName}</small>}
+            {/* Last Name */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.lastName} />
               <input
                 name="lastName"
-                placeholder="Last Name"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.lastName || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.lastName ? 'is-invalid' : ''}`}
               />
+              <label className={styles.outlinedLabel}>Last Name</label>
             </div>
-            <div className="col-12">
-              {fieldErrors.email && <small className="text-danger">{fieldErrors.email}</small>}
+            {/* Email */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.email} />
               <input
-                type="email"
                 name="email"
-                placeholder="Email"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.email || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
+                type="email"
               />
+              <label className={styles.outlinedLabel}>Email</label>
             </div>
-            <div className="col-12">
-              {fieldErrors.phone && <small className="text-danger">{fieldErrors.phone}</small>}
+            {/* Phone */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.phone} />
               <input
                 name="phone"
-                placeholder="Phone"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.phone || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.phone ? 'is-invalid' : ''}`}
+                maxLength="11"
+                pattern="[0-9]{11}"
               />
+              <label className={styles.outlinedLabel}>Phone Number (11 digits)</label>
             </div>
-            <div className="col-12">
-              {fieldErrors.salary && <small className="text-danger">{fieldErrors.salary}</small>}
+            {/* Salary */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.salary} />
               <input
-                type="number"
                 name="salary"
-                placeholder="Salary"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.salary || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.salary ? 'is-invalid' : ''}`}
+                type="number"
               />
+              <label className={styles.outlinedLabel}>Salary</label>
             </div>
-            <div className="col-12">
-              {fieldErrors.address && <small className="text-danger">{fieldErrors.address}</small>}
+            {/* Address */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.address} />
               <input
                 name="address"
-                placeholder="Address"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.address || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.address ? 'is-invalid' : ''}`}
               />
+              <label className={styles.outlinedLabel}>Address</label>
             </div>
-            <div className="col-md-6">
-              {fieldErrors.defaultCheckInTime && <small className="text-danger">{fieldErrors.defaultCheckInTime}</small>}
+            {/* Check-In Time */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.defaultCheckInTime} />
               <input
                 name="defaultCheckInTime"
-                placeholder="Check-In Time"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.defaultCheckInTime || ""}
                 onChange={handleChange}
-                required
-                className={`form-control ${fieldErrors.defaultCheckInTime ? 'is-invalid' : ''}`}
+                type="time"
               />
+              <label className={styles.outlinedLabel}>Check-In Time</label>
             </div>
-            <div className="col-md-6">
-              {fieldErrors.defaultCheckOutTime && <small className="text-danger">{fieldErrors.defaultCheckOutTime}</small>}
+            {/* Check-Out Time */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.defaultCheckOutTime} />
               <input
                 name="defaultCheckOutTime"
-                placeholder="Check-Out Time"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.defaultCheckOutTime || ""}
                 onChange={handleChange}
-                required
-                className={`form-control ${fieldErrors.defaultCheckOutTime ? 'is-invalid' : ''}`}
+                type="time"
               />
+              <label className={styles.outlinedLabel}>Check-Out Time</label>
             </div>
-            <div className="col-md-6">
-              {fieldErrors.gender && <small className="text-danger">{fieldErrors.gender}</small>}
-              <input
-                name="gender"
+            {/* Gender (Select) */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.gender} />
+              <Select
+                options={genderOptions}
+                value={genderOptions.find(opt => opt.value === form.gender) || null}
+                onChange={option => handleChange({ target: { name: 'gender', value: option ? option.value : '' } })}
                 placeholder="Gender"
-                value={form.gender || ""}
-                onChange={handleChange}
-                required
-                className={`form-control ${fieldErrors.gender ? 'is-invalid' : ''}`}
+                styles={{
+                  ...customSelectStyles,
+                  menuPortal: base => ({ ...base, zIndex: 9999 })
+                }}
+                isClearable={false}
+                menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+                menuPosition="fixed"
               />
             </div>
-            <div className="col-md-6">
-              {fieldErrors.nationality && <small className="text-danger">{fieldErrors.nationality}</small>}
+            {/* Nationality */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.nationality} />
               <input
                 name="nationality"
-                placeholder="Nationality"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.nationality || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.nationality ? 'is-invalid' : ''}`}
               />
+              <label className={styles.outlinedLabel}>Nationality</label>
             </div>
-            <div className="col-12">
-              {fieldErrors.nationalId && <small className="text-danger">{fieldErrors.nationalId}</small>}
+            {/* National ID */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.nationalId} />
               <input
                 name="nationalId"
-                placeholder="National ID"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.nationalId || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.nationalId ? 'is-invalid' : ''}`}
               />
+              <label className={styles.outlinedLabel}>National ID</label>
             </div>
-            <div className="col-12">
-              {fieldErrors.birthdate && <small className="text-danger">{fieldErrors.birthdate}</small>}
+            {/* Birthdate */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.birthdate} />
               <input
-                type="date"
+                id="birthdate"
                 name="birthdate"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.birthdate || ""}
                 onChange={handleChange}
                 required
-                className={`form-control ${fieldErrors.birthdate ? 'is-invalid' : ''}`}
+                type="text"
+                pattern="\d{4}-\d{2}-\d{2}"
+                onFocus={e => e.target.type = "date"}
+                onBlur={e => { if (!e.target.value) { e.target.type = "text"; } }}
+              />
+              <label className={styles.outlinedLabel}>Birthdate</label>
+            </div>
+            {/* Department (Select) */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.department} />
+              <Select
+                options={departmentOptions}
+                value={departmentOptions.find(opt => opt.value === (form.department?._id || form.department)) || null}
+                onChange={option => handleChange({ target: { name: 'department', value: option ? option.value : '' } })}
+                placeholder={departmentsLoading ? 'Loading departments...' : 'Department'}
+                styles={{
+                  ...customSelectStyles,
+                  menuPortal: base => ({ ...base, zIndex: 9999 })
+                }}
+                isClearable={false}
+                isDisabled={departmentsLoading}
+                menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+                menuPosition="fixed"
               />
             </div>
-            <div className="col-12">
-              {fieldErrors.department && <small className="text-danger">{fieldErrors.department}</small>}
-              <select
-                name="department"
-                value={form.department?._id || form.department || ""}
-                onChange={handleChange}
-                required
-                disabled={departmentsLoading}
-                className={`form-select ${fieldErrors.department ? 'is-invalid' : ''}`}
-              >
-                <option value="">{departmentsLoading ? "Loading departments..." : "Select Department"}</option>
-                {departments.map((dept) => (
-                  <option key={dept._id} value={dept._id}>{dept.departmentName}</option>
-                ))}
-              </select>
-            </div>
-            <div className="col-12">
-              {fieldErrors.weekendDays && <small className="text-danger">{fieldErrors.weekendDays}</small>}
+            {/* Weekend Days */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.weekendDays} />
               <input
                 name="weekendDays"
-                placeholder="Weekend Days (comma separated)"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={Array.isArray(form.weekendDays) ? form.weekendDays.join(",") : (form.weekendDays || "")}
                 onChange={handleChange}
-                className={`form-control ${fieldErrors.weekendDays ? 'is-invalid' : ''}`}
               />
+              <label className={styles.outlinedLabel}>Weekend Days (comma separated)</label>
             </div>
-            <div className="col-md-6">
-              {fieldErrors.overtimeValue && <small className="text-danger">{fieldErrors.overtimeValue}</small>}
+            {/* Overtime Value */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.overtimeValue} />
               <input
                 name="overtimeValue"
-                placeholder="Overtime Value"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.overtimeValue || ""}
                 onChange={handleChange}
-                className={`form-control ${fieldErrors.overtimeValue ? 'is-invalid' : ''}`}
+              />
+              <label className={styles.outlinedLabel}>Overtime Value</label>
+            </div>
+            {/* Overtime Type (Select) */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.overtimeType} />
+              <Select
+                options={overtimeTypeOptions}
+                value={overtimeTypeOptions.find(opt => opt.value === form.overtimeType) || null}
+                onChange={option => handleChange({ target: { name: 'overtimeType', value: option ? option.value : '' } })}
+                placeholder="Overtime Type"
+                styles={{
+                  ...customSelectStyles,
+                  menuPortal: base => ({ ...base, zIndex: 9999 })
+                }}
+                isClearable={false}
+                menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+                menuPosition="fixed"
               />
             </div>
-            <div className="col-md-6">
-              {fieldErrors.overtimeType && <small className="text-danger">{fieldErrors.overtimeType}</small>}
-              <select
-                name="overtimeType"
-                value={form.overtimeType || ""}
-                onChange={handleChange}
-                required
-                className={`form-select ${fieldErrors.overtimeType ? 'is-invalid' : ''}`}
-              >
-                <option value="">Select Overtime Type</option>
-                <option value="hr">Hour</option>
-                <option value="pound">Pound</option>
-              </select>
-            </div>
-            <div className="col-md-6">
-              {fieldErrors.deductionValue && <small className="text-danger">{fieldErrors.deductionValue}</small>}
+            {/* Deduction Value */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.deductionValue} />
               <input
                 name="deductionValue"
-                placeholder="Deduction Value"
+                className={styles.outlinedInput}
+                placeholder=" "
                 value={form.deductionValue || ""}
                 onChange={handleChange}
-                className={`form-control ${fieldErrors.deductionValue ? 'is-invalid' : ''}`}
+              />
+              <label className={styles.outlinedLabel}>Deduction Value</label>
+            </div>
+            {/* Deduction Type (Select) */}
+            <div className={styles.inputGroup}>
+              <ErrorDisplay error={fieldErrors.deductionType} />
+              <Select
+                options={deductionTypeOptions}
+                value={deductionTypeOptions.find(opt => opt.value === form.deductionType) || null}
+                onChange={option => handleChange({ target: { name: 'deductionType', value: option ? option.value : '' } })}
+                placeholder="Deduction Type"
+                styles={{
+                  ...customSelectStyles,
+                  menuPortal: base => ({ ...base, zIndex: 9999 })
+                }}
+                isClearable={false}
+                menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+                menuPosition="fixed"
               />
             </div>
-            <div className="col-md-6">
-              {fieldErrors.deductionType && <small className="text-danger">{fieldErrors.deductionType}</small>}
-              <select
-                name="deductionType"
-                value={form.deductionType || ""}
-                onChange={handleChange}
-                required
-                className={`form-select ${fieldErrors.deductionType ? 'is-invalid' : ''}`}
-              >
-                <option value="">Select Deduction Type</option>
-                <option value="hr">Hour</option>
-                <option value="pound">Pound</option>
-              </select>
-            </div>
           </div>
-  
-          <div className="d-flex justify-content-end gap-2 mt-4">
-            <button type="submit" className="btn btn-outline-primary text-dark" disabled={loading}>
+          <div className={styles.actions}>
+            <button type="submit" className={styles.updateBtn} disabled={loading}>
               {loading ? "Updating..." : "Update"}
             </button>
-            <button type="button" className="btn btn-outline-secondary text-dark" onClick={() => navigate("/employees")}>
-              Cancel
-            </button>
+            <button type="button" className={styles.cancelBtn} onClick={() => navigate("/employees")}>Cancel</button>
           </div>
         </form>
       </div>

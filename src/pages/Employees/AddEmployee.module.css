@@ -1,50 +1,62 @@
-/* AddEmployee.module.css */
-
 
 .pageBackground {
-  background: #f9f6f6;
+  background: #f4f6fa;
   min-height: 100vh;
-  padding: 0;
+  padding: 40px 0;
 }
 
 .centerCard {
+  max-width: none;
   width: 100%;
-  margin: 0;
+  margin: 0 auto;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  padding: 32px 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 0;
 }
 
 .headerRow {
+  background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 100%);
+  color: #fff;
+  padding: 24px 32px 16px 32px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
-}
-
-.headerIcon {
-  background: #e6f0ff;
-  color: #2563eb;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.7rem;
+  gap: 18px;
+  border-radius: 10px 10px 0 0;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .headerTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #222;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 2px;
 }
 
 .headerSubtitle {
-  color: #888;
-  font-size: 1rem;
-  margin-bottom: 24px;
+  font-size: 1.1rem;
+  color: #dbe2ef;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: none;
+  width: 100%;
+  padding: 0;
+}
+
+.card-header {
+  background: none;
+  color: #1a2233;
+  border-bottom: 1px solid #e9ecf3;
+  border-radius: 0;
+  padding: 24px 32px 0 32px;
+}
+
+.card-body {
+  padding: 32px;
 }
 
 .sectionLabel {
@@ -129,9 +141,6 @@
 }
 
 .inputGroup {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   position: relative;
   margin-bottom: 32px;
 }
@@ -141,16 +150,15 @@
   padding: 20px 12px 8px 12px;
   border: 2px solid #111;
   border-radius: 8px;
-  background: #fff;
+  background: #f4f6fa;
   color: #111;
   font-size: 1rem;
   transition: border-color 0.2s;
 }
 
 .outlinedInput:focus {
-  border-color: #28a1de;
+  border-color: #1a2233;
   border-width: 2px;
-
   outline: none;
 }
 
@@ -158,7 +166,7 @@
   position: absolute;
   left: 16px;
   top: 12px;
-  background: #fff;
+  background: #f4f6fa;
   color: #111;
   font-size: 1rem;
   padding: 0 4px;
@@ -171,9 +179,9 @@
 .outlinedInput:not(:placeholder-shown) + .outlinedLabel {
   top: -10px;
   left: 12px;
-  color:#111;;
+  color: #1a2233;
   font-size: 0.85rem;
-  background: #fff;
+  background: #f4f6fa;
   padding: 0 4px;
 }
 
@@ -181,13 +189,13 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: #fff url('data:image/svg+xml;utf8,<svg fill="%2328a1de" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 16px center/18px 18px;
+  background: #f4f6fa url('data:image/svg+xml;utf8,<svg fill="%231a2233" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 16px center/18px 18px;
   color: #111;
   border: 2px solid #111;
   border-radius: 8px;
   font-size: 1rem;
-  height: 56px !important;
-  min-height: 56px !important;
+  height: 52px !important;
+  min-height: 52px !important;
   padding-top: 20px !important;
   padding-bottom: 8px !important;
   padding-left: 12px !important;
@@ -195,17 +203,17 @@
   box-sizing: border-box;
   transition: border-color 0.2s;
   vertical-align: middle;
-  line-height: 1.2 !important;
+  line-height: normal !important;
 }
 
 .form-select:focus {
-  border-color: #28a1de;
+  border-color: #1a2233;
   outline: none;
 }
 
 .form-select + .outlinedLabel {
   color: #111;
-  background: #fff;
+  background: #f4f6fa;
 }
 
 .form-select:focus + .outlinedLabel,
@@ -213,9 +221,9 @@
 .floating {
   top: -10px !important;
   left: 12px !important;
-  color: #28a1de !important;
+  color: #1a2233 !important;
   font-size: 0.85rem !important;
-  background: #fff !important;
+  background: #f4f6fa !important;
   padding: 0 4px !important;
 }
 
@@ -227,28 +235,35 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(40, 161, 222, 0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   outline: none;
 }
 
 .primary {
-  background: #28a1de;
+  background: #1a2233;
   color: #fff;
 }
 
 .primary:hover,
 .primary:focus {
-  background: #1b7bb3;
+  background: #111a2c;
 }
 
 .secondary {
   background: #fff;
-  color: #28a1de;
-  border: 2px solid #28a1de;
+  color: #1a2233;
+  border: 2px solid #1a2233;
 }
 
 .secondary:hover,
 .secondary:focus {
-  background: #e6f4fa;
-  color: #1b7bb3;
+  background: #e9ecf3;
+  color: #111a2c;
+}
+
+@media (max-width: 600px) {
+  .centerCard { padding: 0; }
+  .headerRow { flex-direction: column; align-items: flex-start; padding: 18px 12px 10px 12px; }
+  .headerTitle { font-size: 1.2rem; }
+  .card-header, .card-body { padding: 12px; }
 } 
