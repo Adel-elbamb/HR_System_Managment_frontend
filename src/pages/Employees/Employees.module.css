@@ -1,0 +1,242 @@
+.container {
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  max-width: none;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.header {
+  background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 100%);
+  color: #fff;
+  padding: 24px 32px 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px 10px 0 0;
+}
+
+.headerTitle {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.headerSubtitle {
+  font-size: 1.1rem;
+  color: #dbe2ef;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.actionBtn {
+  background: #1a2233;
+  color: #fff;
+  border: 2px solid #1a2233;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.15s;
+  cursor: pointer;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.13);
+}
+
+.actionBtn:hover,
+.actionBtn:focus {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(56,189,248,0.22);
+  transform: scale(1.07);
+  filter: brightness(1.08);
+}
+
+.searchGroup {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.searchInput, .dateInput {
+  border: 2px solid #1a2233;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  background: #f4f6fa;
+  color: #111;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus, .dateInput:focus {
+  border-color: #111a2c;
+}
+
+.clearBtn {
+  background: #fff;
+  color: #1a2233;
+  border: 2px solid #1a2233;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  width: 100%;
+}
+
+.clearBtn:hover {
+  background: #1a2233;
+  color: #fff;
+}
+
+.table {
+  width: 100%;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.table th {
+  color: #1a2233;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+}
+
+.table td {
+  padding: 10px 16px;
+  background: #f4f6fa;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.08rem;
+  text-align: center;
+  color: #111;
+}
+
+.table tr {
+  transition: background 0.15s;
+}
+
+.table tr:hover td {
+  background: #e9ecf3;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: #e9ecf3;
+  color: #1a2233;
+  margin-right: 6px;
+}
+
+.actionBtns {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.actionBtnTable {
+  border: none;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(26,34,51,0.07);
+}
+
+.actionBtnTable.view {
+  background: #2563eb;
+  color: #fff;
+}
+.actionBtnTable.view:hover {
+  background: #1741a6;
+  color: #fff;
+  transform: scale(1.09);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+}
+
+.actionBtnTable.edit {
+  background: #f59e42;
+  color: #fff;
+}
+.actionBtnTable.edit:hover {
+  background: #c97a13;
+  color: #fff;
+  transform: scale(1.09);
+  box-shadow: 0 4px 16px rgba(245,158,66,0.18);
+}
+
+.actionBtnTable.delete {
+  background: #ef4444;
+  color: #fff;
+}
+.actionBtnTable.delete:hover {
+  background: #b91c1c;
+  color: #fff;
+  transform: scale(1.09);
+  box-shadow: 0 4px 16px rgba(239,68,68,0.18);
+}
+
+.actionBtnTable i {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.pagination {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pageBtn {
+  background: #fff;
+  color: #1a2233;
+  border: 2px solid #1a2233;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+
+.pageBtn.active, .pageBtn:hover {
+  background: #1a2233;
+  color: #fff;
+  transform: scale(1.08);
+}
+
+@media (max-width: 600px) {
+  .card { padding: 0; }
+  .header { flex-direction: column; align-items: flex-start; padding: 18px 12px 10px 12px; }
+  .headerTitle { font-size: 1.2rem; }
+  .table th, .table td { padding: 8px 8px 8px 12px; font-size: 0.98rem; }
+  .searchGroup { flex-direction: column; gap: 8px; }
+  .buttonGroup { flex-direction: column; gap: 8px; }
+} 
