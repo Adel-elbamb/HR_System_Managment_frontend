@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { handleBackendValidationErrors, handleGeneralBackendError } from "../../utils/errorHandler";
 import ErrorDisplay from "../../components/common/ErrorDisplay";
 import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "./AddEmployee.module.css";
+import Select from 'react-select';
+import VeryButton from '../../components/common/VeryButton';
 
 function getHourDecimal(timeStr) {
   if (!timeStr) return 0;
@@ -31,6 +34,22 @@ const initialState = {
   deductionValue: null,
   deductionType: "",
 };
+
+const genderOptions = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Other' }
+];
+
+const overtimeTypeOptions = [
+  { value: 'hr', label: 'Hour' },
+  { value: 'pound', label: 'Pound' }
+];
+
+const deductionTypeOptions = [
+  { value: 'hr', label: 'Hour' },
+  { value: 'pound', label: 'Pound' }
+];
 
 const AddEmployee = ({ onSuccess, onCancel }) => {
   const [form, setForm] = useState(initialState);
@@ -108,7 +127,12 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
 
     const submitData = {
       ...form,
-      weekendDays: form.weekendDays ? form.weekendDays.split(",").map(day => day.trim()).filter(Boolean) : [],
+      weekendDays: form.weekendDays
+        ? form.weekendDays
+            .split(",")
+            .map(day => day.trim().toLowerCase())
+            .filter(Boolean)
+        : [],
       overtimeValue: form.overtimeValue !== null ? Number(form.overtimeValue) : undefined,
       deductionValue: form.deductionValue !== null ? Number(form.deductionValue) : undefined,
     };
@@ -305,293 +329,385 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
     navigate("/employees");
   };
 
+  // Department options from API
+  const departmentOptions = departments.map(dept => ({ value: dept._id, label: dept.departmentName }));
+
+  const customSelectStyles = {
+    control: (base, state) => ({
+      ...base,
+      minHeight: 52,
+      height: 52,
+      borderRadius: 8,
+      borderColor: state.isFocused ? '#28a1de' : '#111',
+      boxShadow: 'none',
+      '&:hover': { borderColor: '#28a1de' },
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      height: 52,
+      padding: '0 12px',
+    }),
+    input: (base) => ({
+      ...base,
+      margin: 0,
+      color: '#111',
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: '#111',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#111',
+      fontSize: '1rem',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      left: 16,
+      position: 'absolute',
+    }),
+  };
+
   return (
-    <div className="container py-4">
-      <div className="card shadow border-0 rounded-3">
-        <div className="card-header text-center bg-secondary-subtle text-white d-flex align-items-center ">
-          <h3 className="mb-0 h4 text-center text-dark">Add Employee</h3>
+    <div className={styles.pageBackground}>
+      <div className={styles.centerCard}>
+        <div className={styles.headerRow}>
+         
         </div>
-        <div className="card-body p-4">
-          {error && (
-            <div className="alert alert-danger alert-dismissible fade show" role="alert">
-              {error}
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => setError("")}
-                aria-label="Close"
-              ></button>
-            </div>
-          )}
-          <form onSubmit={handleSubmit}>
-            <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.firstName} />
-                <input
-                  name="firstName"
-                  className="form-control"
-                  placeholder="First Name"
-                  value={form.firstName}
-                  onChange={handleChange}
-                  required
-                />
+        <div className="card shadow border-0 rounded-3">
+          <div className="card-header text-center bg-secondary-subtle text-white d-flex align-items-center ">
+            <h3 className="mb-0 h4 text-center text-dark">Add Employee</h3>
+          </div>
+          <div className="card-body p-4">
+            {error && (
+              <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                {error}
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setError("")}
+                  aria-label="Close"
+                ></button>
               </div>
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.lastName} />
-                <input
-                  name="lastName"
-                  className="form-control"
-                  placeholder="Last Name"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  required
-                />
+            )}
+            <form onSubmit={handleSubmit}>
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.firstName} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="firstName"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.firstName}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label className={styles.outlinedLabel}>First Name</label>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.lastName} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="lastName"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.lastName}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label className={styles.outlinedLabel}>Last Name</label>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.email} />
-              <input
-                name="email"
-                className="form-control"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                type="email"
-              />
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.phone} />
-              <input
-                name="phone"
-                className="form-control"
-                placeholder="Phone Number (11 digits)"
-                value={form.phone}
-                onChange={handleChange}
-                required
-                maxLength="11"
-                pattern="[0-9]{11}"
-              />
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.salary} />
-              <input
-                name="salary"
-                className="form-control"
-                placeholder="Salary"
-                value={form.salary}
-                onChange={handleChange}
-                required
-                type="number"
-              />
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.address} />
-              <input
-                name="address"
-                className="form-control"
-                placeholder="Address"
-                value={form.address}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.defaultCheckInTime} />
-                <input
-                  name="defaultCheckInTime"
-                  className="form-control"
-                  placeholder="Check-In Time (HH:MM:SS)"
-                  value={form.defaultCheckInTime}
-                  onChange={handleChange}
-                  required
-                />
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.email} />
+                <div className={styles.inputGroup}>
+                  <input
+                    name="email"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    type="email"
+                  />
+                  <label className={styles.outlinedLabel}>Email</label>
+                </div>
               </div>
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.defaultCheckOutTime} />
-                <input
-                  name="defaultCheckOutTime"
-                  className="form-control"
-                  placeholder="Check-Out Time (HH:MM:SS)"
-                  value={form.defaultCheckOutTime}
-                  onChange={handleChange}
-                  required
-                />
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.phone} />
+                <div className={styles.inputGroup}>
+                  <input
+                    name="phone"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                    maxLength="11"
+                    pattern="[0-9]{11}"
+                  />
+                  <label className={styles.outlinedLabel}>Phone Number (11 digits)</label>
+                </div>
               </div>
-            </div>
-            <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.gender} />
-                <select
-                  name="gender"
-                  className="form-select"
-                  value={form.gender}
-                  onChange={handleChange}
-                  required
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.salary} />
+                <div className={styles.inputGroup}>
+                  <input
+                    name="salary"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.salary}
+                    onChange={handleChange}
+                    required
+                    type="number"
+                  />
+                  <label className={styles.outlinedLabel}>Salary</label>
+                </div>
+              </div>
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.address} />
+                <div className={styles.inputGroup}>
+                  <input
+                    name="address"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.address}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className={styles.outlinedLabel}>Address</label>
+                </div>
+              </div>
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.defaultCheckInTime} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="defaultCheckInTime"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.defaultCheckInTime}
+                      onChange={handleChange}
+                      type="time"
+                    />
+                    <label className={styles.outlinedLabel}>Check-In Time</label>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.defaultCheckOutTime} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="defaultCheckOutTime"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.defaultCheckOutTime}
+                      onChange={handleChange}
+                      type="time"
+                    />
+                    <label className={styles.outlinedLabel}>Check-Out Time</label>
+                  </div>
+                </div>
+              </div>
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.gender} />
+                  <div className={styles.inputGroup}>
+                    <Select
+                      options={genderOptions}
+                      value={genderOptions.find(opt => opt.value === form.gender) || null}
+                      onChange={option => handleChange({ target: { name: 'gender', value: option ? option.value : '' } })}
+                      placeholder="Gender"
+                      styles={{
+                        ...customSelectStyles,
+                        menuPortal: base => ({ ...base, zIndex: 9999 })
+                      }}
+                      isClearable={false}
+                      menuPortalTarget={document.body}
+                      menuPosition="fixed"
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.nationality} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="nationality"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.nationality}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label className={styles.outlinedLabel}>Nationality</label>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.nationalId} />
+                <div className={styles.inputGroup}>
+                  <input
+                    name="nationalId"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.nationalId}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className={styles.outlinedLabel}>National ID</label>
+                </div>
+              </div>
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.birthdate} />
+                <div className={styles.inputGroup}>
+                  <input
+                    id="birthdate"
+                    name="birthdate"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.birthdate}
+                    onChange={handleChange}
+                    required
+                    type="text"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    onFocus={(e) => e.target.type = "date"}
+                    onBlur={(e) => {
+                      if (!e.target.value) {
+                        e.target.type = "text";
+                      }
+                    }}
+                  />
+                  <label className={styles.outlinedLabel}>Birthdate</label>
+                </div>
+              </div>
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.department} />
+                <div className={styles.inputGroup}>
+                  <Select
+                    options={departmentOptions}
+                    value={departmentOptions.find(opt => opt.value === form.department) || null}
+                    onChange={option => handleChange({ target: { name: 'department', value: option ? option.value : '' } })}
+                    placeholder={departmentsLoading ? 'Loading departments...' : 'Department'}
+                    styles={{
+                      ...customSelectStyles,
+                      menuPortal: base => ({ ...base, zIndex: 9999 })
+                    }}
+                    isClearable={false}
+                    isDisabled={departmentsLoading}
+                    menuPortalTarget={document.body}
+                    menuPosition="fixed"
+                  />
+                </div>
+              </div>
+              <div className="mb-3">
+                <ErrorDisplay error={fieldErrors.weekendDays} />
+                <div className={styles.inputGroup}>
+                  <input
+                    name="weekendDays"
+                    className={styles.outlinedInput}
+                    placeholder=" "
+                    value={form.weekendDays}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.outlinedLabel}>Weekend Days (comma separated)</label>
+                </div>
+              </div>
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.overtimeValue} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="overtimeValue"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.overtimeValue ?? ""}
+                      onChange={handleChange}
+                      type="number"
+                      required
+                    />
+                    <label className={styles.outlinedLabel}>Overtime Value</label>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.overtimeType} />
+                  <div className={styles.inputGroup}>
+                    <Select
+                      options={overtimeTypeOptions}
+                      value={overtimeTypeOptions.find(opt => opt.value === form.overtimeType) || null}
+                      onChange={option => handleChange({ target: { name: 'overtimeType', value: option ? option.value : '' } })}
+                      placeholder="Overtime Type"
+                      styles={{
+                        ...customSelectStyles,
+                        menuPortal: base => ({ ...base, zIndex: 9999 })
+                      }}
+                      isClearable={false}
+                      menuPortalTarget={document.body}
+                      menuPosition="fixed"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.deductionValue} />
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="deductionValue"
+                      className={styles.outlinedInput}
+                      placeholder=" "
+                      value={form.deductionValue ?? ""}
+                      onChange={handleChange}
+                      type="number"
+                      required
+                    />
+                    <label className={styles.outlinedLabel}>Deduction Value</label>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <ErrorDisplay error={fieldErrors.deductionType} />
+                  <div className={styles.inputGroup}>
+                    <Select
+                      options={deductionTypeOptions}
+                      value={deductionTypeOptions.find(opt => opt.value === form.deductionType) || null}
+                      onChange={option => handleChange({ target: { name: 'deductionType', value: option ? option.value : '' } })}
+                      placeholder="Deduction Type"
+                      styles={{
+                        ...customSelectStyles,
+                        menuPortal: base => ({ ...base, zIndex: 9999 })
+                      }}
+                      isClearable={false}
+                      menuPortalTarget={document.body}
+                      menuPosition="fixed"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex gap-2">
+                <VeryButton
+                  type="submit"
+                  variant="primary"
+                  disabled={loading}
                 >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.nationality} />
-                <input
-                  name="nationality"
-                  className="form-control"
-                  placeholder="Nationality"
-                  value={form.nationality}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.nationalId} />
-              <input
-                name="nationalId"
-                className="form-control"
-                placeholder="National ID"
-                value={form.nationalId}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.birthdate} />
-            
-              <input
-                id="birthdate"
-                name="birthdate"
-                className="form-control"
-                placeholder="Birthdate"
-                value={form.birthdate}
-                onChange={handleChange}
-                required
-                type="text"
-                pattern="\d{4}-\d{2}-\d{2}"
-                onFocus={(e) => e.target.type = "date"}
-                onBlur={(e) => {
-                  if (!e.target.value) {
-                    e.target.type = "text";
-                  }
-                }}
-              />
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.department} />
-              <select
-                name="department"
-                className="form-select"
-                value={form.department}
-                onChange={handleChange}
-                required
-                disabled={departmentsLoading}
-              >
-                <option value="">{departmentsLoading ? "Loading departments..." : "Select Department"}</option>
-                {departments.map((dept) => (
-                  <option key={dept._id} value={dept._id}>{dept.departmentName}</option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-3">
-              <ErrorDisplay error={fieldErrors.weekendDays} />
-              <input
-                name="weekendDays"
-                className="form-control"
-                placeholder="Weekend Days (comma separated)"
-                value={form.weekendDays}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.overtimeValue} />
-                <input
-                  name="overtimeValue"
-                  className="form-control"
-                  placeholder="Overtime Value"
-                  value={form.overtimeValue ?? ""}
-                  onChange={handleChange}
-                  type="number"
-                  required
-                />
-              </div>
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.overtimeType} />
-                <select
-                  name="overtimeType"
-                  className="form-select"
-                  value={form.overtimeType}
-                  onChange={handleChange}
-                  required
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Adding...
+                    </>
+                  ) : (
+                    "Add Employee"
+                  )}
+                </VeryButton>
+                <VeryButton
+                  type="button"
+                  variant="secondary"
+                  onClick={handleCancel}
                 >
-                  <option value="">Select Overtime Type</option>
-                  <option value="hr">Hour</option>
-                  <option value="pound">Pound</option>
-                </select>
+                  Cancel
+                </VeryButton>
               </div>
-            </div>
-            <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.deductionValue} />
-                <input
-                  name="deductionValue"
-                  className="form-control"
-                  placeholder="Deduction Value"
-                  value={form.deductionValue ?? ""}
-                  onChange={handleChange}
-                  type="number"
-                  required
-                />
-              </div>
-              <div className="col-md-6">
-                <ErrorDisplay error={fieldErrors.deductionType} />
-                <select
-                  name="deductionType"
-                  className="form-select"
-                  value={form.deductionType}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select Deduction Type</option>
-                  <option value="hr">Hour</option>
-                  <option value="pound">Pound</option>
-                </select>
-              </div>
-            </div>
-            <div className="d-flex gap-2">
-              <button
-                type="submit"
-                className="btn btn-outline-primary text-dark"
-                disabled={loading}
-                style={{ transition: "transform 0.2s" }}
-                onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Adding...
-                  </>
-                ) : (
-                  "Add Employee"
-                )}
-              </button>
-              <button
-                type="button"
-                className="btn btn-outline-secondary text-dark"
-                onClick={handleCancel}
-                style={{ transition: "transform 0.2s" }}
-                onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
