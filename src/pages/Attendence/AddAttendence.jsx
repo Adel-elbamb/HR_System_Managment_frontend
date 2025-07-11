@@ -45,12 +45,24 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   }, [initialData, isOpen]);
 
   const handleSubmit = async () => {
-    const payload = {
-      employeeId,
-      checkInTime,
-      checkOutTime,
-      status,
-    };
+    let payload;
+    if (status === "absent") {
+      let checkInTime = "00:00";
+      let checkOutTime = "00:00";
+      payload = {
+        employeeId,
+        checkInTime,
+        checkOutTime,
+        status,
+      };
+    } else {
+      payload = {
+        employeeId,
+        checkInTime,
+        checkOutTime,
+        status,
+      };
+    }
 
     try {
       if (initialData) {
@@ -68,14 +80,8 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   };
 
   return (
-    <div
-      className={style.modalOverlay}
-      onClick={onClose} 
-    >
-      <div
-        className={style.modal}
-        onClick={(e) => e.stopPropagation()} 
-      >
+    <div className={style.modalOverlay} onClick={onClose}>
+      <div className={style.modal} onClick={(e) => e.stopPropagation()}>
         <h3 className={style.heading}>
           {initialData ? "Edit Attendance" : "Add Attendance"}
         </h3>
@@ -84,9 +90,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
           <input
             type="text"
             className={style.input}
-            value={
-              employees.find((emp) => emp._id === employeeId)?.name
-            }
+            value={employees.find((emp) => emp._id === employeeId)?.name}
             disabled
           />
         ) : (
@@ -104,21 +108,24 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
           </select>
         )}
 
-        <input
-          type="time"
-          placeholder="Check-In Time"
-          className={style.input}
-          value={checkInTime}
-          onChange={(e) => setCheckInTime(e.target.value)}
-        />
-
-        <input
-          type="time"
-          placeholder="Check-Out Time"
-          className={style.input}
-          value={checkOutTime}
-          onChange={(e) => setCheckOutTime(e.target.value)}
-        />
+        {status === "present" && (
+          <>
+            <input
+              type="time"
+              placeholder="Check-In Time"
+              className={style.input}
+              value={checkInTime}
+              onChange={(e) => setCheckInTime(e.target.value)}
+            />
+            <input
+              type="time"
+              placeholder="Check-Out Time"
+              className={style.input}
+              value={checkOutTime}
+              onChange={(e) => setCheckOutTime(e.target.value)}
+            />{" "}
+          </>
+        )}
 
         <select
           className={style.input}
