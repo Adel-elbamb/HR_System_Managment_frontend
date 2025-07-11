@@ -17,18 +17,116 @@
   margin: 0 auto;
 }
 
+.loginBg {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(120deg, #0ea5e9 0%, #2563eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginContainer {
+  background: #fff;
+  border-radius: 32px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  display: flex;
+  width: 900px;
+  max-width: 95vw;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.formSection {
+  flex: 1;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.imageSection {
+  flex: 1;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hrImg {
+  width: 90%;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+.label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-top: 18px;
+  display: block;
+  color: #444;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 24px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  background: #f8fafc;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.input:focus {
+  border: 1.5px solid #2563eb;
+}
+
+.forgot {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.forgot a {
+  color: #2563eb;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
 .signInBtn {
-  background: linear-gradient(90deg, #2563EB, #1D4ED8);
-  color: white;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 6px;
-  transition: 0.3s ease-in-out;
+  width: 100%;
+  background: #e48c7e;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 12px 0;
+  border-radius: 24px;
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
 .signInBtn:hover {
-  opacity: 0.9;
+  background: #d97b6b;
 }
+
+.error {
+  color: #d32f2f;
+  background: #ffeaea;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  font-size: 0.98rem;
+}
+
 .noRightBorder {
   border-right: none !important;
 }
