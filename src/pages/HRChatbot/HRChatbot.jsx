@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import askChatBot from '../../services/chatbot.services.js';
-import './HRChatbot.css';
+import React, { useState, useEffect, useRef } from "react";
+import askChatBot from "../../services/chatbot.services.js";
+import "./HRChatbot.css";
 
 const HRChatbot = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -20,32 +20,48 @@ const HRChatbot = () => {
     "How do I add a new employee?",
     "How do I calculate overtime pay?",
     "What are the attendance rules?",
-    "How do I add a new department?"
+    "How do I add a new department?",
   ];
 
   const sendMessage = async (question = null) => {
     const questionToSend = question || message;
     if (!questionToSend.trim()) return;
 
-    const userMsg = { sender: 'User', text: questionToSend, timestamp: new Date() };
-    setChat(prev => [...prev, userMsg]);
+    const userMsg = {
+      sender: "User",
+      text: questionToSend,
+      timestamp: new Date(),
+    };
+    setChat((prev) => [...prev, userMsg]);
     setLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const response = await askChatBot(questionToSend);
-      
+      // Extract the answer string from the response object
+      let answer =
+        response?.data?.answer ||
+        response?.answer ||
+        response?.data ||
+        "I'm here to help! What would you like to know about?";
+      // If answer is an object (e.g., {message, results}), stringify or format it
+      if (typeof answer === "object" && answer !== null) {
+        if (answer.message) {
+          answer = answer.message;
+        } else {
+          answer = JSON.stringify(answer);
+        }
+      }
       const botMessage = {
-        sender: 'Bot',
-        text: response.data?.answer || response.answer || 'I\'m here to help! What would you like to know about?',
-        timestamp: new Date()
+        sender: "Bot",
+        text: answer,
+        timestamp: new Date(),
       };
-      
-      setChat(prev => [...prev, botMessage]);
+      setChat((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("❌ Chat error:", error);
       const errorMessage = {
-        sender: 'Bot',
+        sender: "Bot",
         text: `🤖 **I'm here to help!** 
 
 It looks like I couldn't process your request right now. Here are some things I can help you with:
@@ -65,16 +81,19 @@ It looks like I couldn't process your request right now. Here are some things I 
 • "How do I assign employees to departments?"
 
 **Try asking your question again, or use one of the suggested questions above!**`,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      setChat(prev => [...prev, errorMessage]);
+      setChat((prev) => [...prev, errorMessage]);
     } finally {
       setLoading(false);
     }
   };
 
   const formatTime = (timestamp) => {
-    return timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return timestamp.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const handleSuggestedQuestion = (question) => {
@@ -86,8 +105,8 @@ It looks like I couldn't process your request right now. Here are some things I 
     setMessage(e.target.value);
     // Auto-resize textarea
     const textarea = e.target;
-    textarea.style.height = 'auto';
-    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    textarea.style.height = "auto";
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px";
   };
 
   // Component to render suggested questions
@@ -113,12 +132,10 @@ It looks like I couldn't process your request right now. Here are some things I 
     <>
       {/* Floating Chat Icon */}
       <button
-        className={`chat-toggle-btn ${isOpen ? 'active' : ''}`}
+        className={`chat-toggle-btn ${isOpen ? "active" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="chat-icon">
-          {isOpen ? '✕' : '💬'}
-        </div>
+        <div className="chat-icon">{isOpen ? "✕" : "💬"}</div>
         <div className="chat-pulse"></div>
       </button>
 
@@ -135,10 +152,7 @@ It looks like I couldn't process your request right now. Here are some things I 
                   <span className="status">Online</span>
                 </div>
               </div>
-              <button 
-                className="close-btn" 
-                onClick={() => setIsOpen(false)}
-              >
+              <button className="close-btn" onClick={() => setIsOpen(false)}>
                 ✕
               </button>
             </div>
@@ -152,28 +166,48 @@ It looks like I couldn't process your request right now. Here are some things I 
                 <div className="welcome-message">
                   <div className="welcome-icon">👋</div>
                   <h2>Hello! I'm your HR Assistant</h2>
-                  <p>I can help you with employee management, payroll, and more!</p>
-                  
+                  <p>
+                    I can help you with employee management, payroll, and more!
+                  </p>
+
                   {/* Employee Search Example */}
                   <div className="search-example">
                     <h4>🔍 Employee Search</h4>
-                    <p>Try: "I want info about [Name]" or "Tell me about employee [Name]"</p>
-                    <p>Examples: "I want info about Ahmed" or "Tell me about employee John Smith"</p>
-                    <p>For first name only: "Show me only employees with first name Ali"</p>
+                    <p>
+                      Try: "I want info about [Name]" or "Tell me about employee
+                      [Name]"
+                    </p>
+                    <p>
+                      Examples: "I want info about Ahmed" or "Tell me about
+                      employee John Smith"
+                    </p>
+                    <p>
+                      For first name only: "Show me only employees with first
+                      name Ali"
+                    </p>
                   </div>
-                  
+
                   {/* Suggested Questions */}
                   <SuggestedQuestions />
-                  
-                  <p className="welcome-footer">Or type your own question below!</p>
+
+                  <p className="welcome-footer">
+                    Or type your own question below!
+                  </p>
                 </div>
               )}
-              
+
               {chat.map((msg, i) => (
-                <div key={i} className={`message-wrapper ${msg.sender === 'User' ? 'user-message' : 'bot-message'}`}>
+                <div
+                  key={i}
+                  className={`message-wrapper ${
+                    msg.sender === "User" ? "user-message" : "bot-message"
+                  }`}
+                >
                   <div className="message-bubble">
                     <div className="message-content">
-                      {msg.sender === 'Bot' && <div className="bot-indicator">🤖</div>}
+                      {msg.sender === "Bot" && (
+                        <div className="bot-indicator">🤖</div>
+                      )}
                       <div className="message-text">{msg.text}</div>
                     </div>
                     <div className="message-time">
@@ -182,7 +216,7 @@ It looks like I couldn't process your request right now. Here are some things I 
                   </div>
                 </div>
               ))}
-              
+
               {loading && (
                 <div className="message-wrapper bot-message">
                   <div className="message-bubble loading-bubble">
@@ -200,14 +234,14 @@ It looks like I couldn't process your request right now. Here are some things I 
                   </div>
                 </div>
               )}
-              
+
               {/* Show suggested questions after every response */}
               {chat.length > 0 && !loading && (
                 <div className="suggestions-after-response">
                   <SuggestedQuestions />
                 </div>
               )}
-              
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -220,7 +254,7 @@ It looks like I couldn't process your request right now. Here are some things I 
                   value={message}
                   onChange={handleTextareaChange}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey && !loading) {
+                    if (e.key === "Enter" && !e.shiftKey && !loading) {
                       e.preventDefault();
                       sendMessage();
                     }
@@ -228,8 +262,8 @@ It looks like I couldn't process your request right now. Here are some things I 
                   disabled={loading}
                   rows="1"
                 />
-                <button 
-                  className="send-btn" 
+                <button
+                  className="send-btn"
                   onClick={() => sendMessage()}
                   disabled={loading || !message.trim()}
                 >
