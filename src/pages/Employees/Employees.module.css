@@ -158,15 +158,15 @@
 .actionBtnTable {
   border: none;
   border-radius: 8px;
-  padding: 7px 16px;
+  padding: 5px 5px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  display: flex;
-  align-items: center;
+  display: flex; 
+  align-items: center; 
   justify-content: center;
   transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.15s;
-  box-shadow: 0 2px 8px rgba(26,34,51,0.07);
+   box-shadow: 0 2px 8px rgba(26,34,51,0.07); 
 }
 
 .actionBtnTable.view {
@@ -239,4 +239,4 @@
   .table th, .table td { padding: 8px 8px 8px 12px; font-size: 0.98rem; }
   .searchGroup { flex-direction: column; gap: 8px; }
   .buttonGroup { flex-direction: column; gap: 8px; }
-} 
+}  
