@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Container, Row, Col, Table, Alert } from "react-bootstrap";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
 import { debounce } from "lodash";
 import axiosInstance from "./../../services/axiosInstance";
 import ViewPayroll from "./ViewPayroll";
@@ -52,11 +52,14 @@ function Payroll() {
         return;
       }
 
-      const filtered = payroll.filter((record) =>
-        record.employeeId &&
-        `${record.employeeId.firstName || ""} ${record.employeeId.lastName || ""}`
-          .toLowerCase()
-          .includes(trimmedName.toLowerCase())
+      const filtered = payroll.filter(
+        (record) =>
+          record.employeeId &&
+          `${record.employeeId.firstName || ""} ${
+            record.employeeId.lastName || ""
+          }`
+            .toLowerCase()
+            .includes(trimmedName.toLowerCase())
       );
       setFilteredPayroll(filtered);
       setCurrentPage(0);
@@ -103,7 +106,10 @@ function Payroll() {
         setCurrentPage(0);
         setError(null); // Clear error on success
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch filtered salary records");
+        setError(
+          err.response?.data?.message ||
+            "Failed to fetch filtered salary records"
+        );
         setFilteredPayroll([]);
       }
     }, 500),
@@ -122,7 +128,7 @@ function Payroll() {
 
   // Fetch single payroll record for view
   const handleView = async (id) => {
-      console.log("🔍 Fetching payroll for ID:", id); // ← أضف هذا
+    console.log("🔍 Fetching payroll for ID:", id); // ← أضف هذا
     try {
       setViewPayroll(false);
       setViewData(null);
@@ -153,11 +159,15 @@ function Payroll() {
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3">
         <div>
           <h3>Employee Records Management</h3>
-          <p className="text-muted mb-0">View and filter employee salary records</p>
+          <p className="text-muted mb-0">
+            View and filter employee salary records
+          </p>
         </div>
         <div className="col-md-3 ms-auto">
           <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
-            <span className="input-group-text fw-semibold text-primary bg-transparent border-0">Employee</span>
+            <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
+              Employee
+            </span>
             <input
               type="text"
               className="form-control form-control-sm bg-transparent border-0"
@@ -169,10 +179,15 @@ function Payroll() {
         </div>
       </div>
 
-      <div className="d-flex align-items-center flex-wrap gap-2" style={{ maxWidth: "1000px", marginTop: "20px", marginLeft: "200px" }}>
+      <div
+        className="d-flex align-items-center flex-wrap gap-2"
+        style={{ maxWidth: "1000px", marginTop: "20px", marginLeft: "200px" }}
+      >
         <div className="position-relative" style={{ width: "170px" }}>
           <div className="input-group input-group-sm rounded-pill shadow-sm">
-            <span className="input-group-text bg-white border-0 text-primary fw-semibold">From</span>
+            <span className="input-group-text bg-white border-0 text-primary fw-semibold">
+              From
+            </span>
             <input
               type="date"
               className="form-control border-0"
@@ -184,7 +199,9 @@ function Payroll() {
 
         <div className="position-relative" style={{ width: "170px" }}>
           <div className="input-group input-group-sm rounded-pill shadow-sm">
-            <span className="input-group-text bg-white border-0 text-primary fw-semibold">To</span>
+            <span className="input-group-text bg-white border-0 text-primary fw-semibold">
+              To
+            </span>
             <input
               type="date"
               className="form-control border-0"
@@ -217,7 +234,8 @@ function Payroll() {
       )}
       {!error && currentItems.length === 0 && (
         <Alert variant="info" className="mt-4">
-          No salary records found for the selected filters. Try adjusting your search or date range.
+          No salary records found for the selected filters. Try adjusting your
+          search or date range.
         </Alert>
       )}
       {currentItems.length > 0 && (
@@ -226,12 +244,15 @@ function Payroll() {
             <thead>
               <tr>
                 <th className="text-center">Employee Name</th>
-                <th className="text-center">Month/Year</th>
-                <th className="text-center">Bonus</th>
-                <th className="text-center">Deduction</th>
-                <th className="text-center">Days of Absence</th>
-                <th className="text-center">Hourly Discount</th>
-                <th className="text-center">Net Salary</th>
+                <th className="text-center">Department</th>
+                <th className="text-center">Salary</th>
+                <th className="text-center">Attended Days</th>
+                <th className="text-center">Absent Days</th>
+                <th className="text-center">Overtime</th>
+                <th className="text-center">Deduct Time</th>
+                <th className="text-center">Total Bouns</th>
+                <th className="text-center">Total Deduction</th>
+                <th className="text-center">Net salary</th>
                 <th className="text-center">Actions</th>
               </tr>
             </thead>
@@ -240,23 +261,23 @@ function Payroll() {
                 <tr key={record._id}>
                   <td className="text-center">
                     {record.employeeId
-                      ? `${record.employeeId.firstName || ""} ${record.employeeId.lastName || ""}`
+                      ? `${record.employeeId.firstName || ""} ${
+                          record.employeeId.lastName || ""
+                        }`
                       : "N/A"}
                   </td>
-                  <td className="text-center">{`${record.month}/${record.year}`}</td>
                   <td className="text-center">
-                    {record.totalBonusAmount ? `$${record.totalBonusAmount.toFixed(2)}` : "$0.00"}
+                    {record.employeeId.department.departmentName}
                   </td>
-                  <td className="text-center">
-                    {record.totalDeductionAmount ? `$${record.totalDeductionAmount.toFixed(2)}` : "$0.00"}
-                  </td>
-                  <td className="text-center">{record.absentDays || 0}</td>
-                  <td className="text-center">
-                    {record.totalOvertime ? `$${record.totalOvertime.toFixed(2)}/hr` : "$0.00/hr"}
-                  </td>
-                  <td className="text-center">
-                    {record.netSalary ? `$${record.netSalary.toFixed(2)}` : "$0.00"}
-                  </td>
+                  <td className="text-center">{record.employeeId.salary}</td>
+                  <td className="text-center">{record.attendedDays}</td>
+                  <td className="text-center">{record.absentDays}</td>
+                  <td className="text-center">{record.totalOvertime}</td>
+                  <td className="text-center">{record.totalDeduction}</td>
+                  <td className="text-center">{record.totalBonusAmount}</td>
+                  <td className="text-center">{record.totalDeductionAmount}</td>
+                  <td className="text-center">{record.netSalary}</td>
+
                   <td className="text-center">
                     <i
                       className="bi bi-eye text-muted"
