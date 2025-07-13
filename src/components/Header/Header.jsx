@@ -8,15 +8,16 @@ const Header = () => {
     try {
       await authService.logout();
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   return (
     <div className="header shadow-sm">
       <div className="logo-section">
-        <div className="logo-icon">
+        <div className="logo-icon ">
           <Users size={24} color="white" />
+          {/* <img src="/logo/Logo1.png" className="newLogo" alt="" srcset="" /> */}
         </div>
         <div>
           <h5 className="system-title">HR System</h5>
@@ -35,7 +36,12 @@ const Header = () => {
           <span className="dot" />
         </div> */}
         {/* <Settings size={18} className="icon" /> */}
-        <LogOut size={18} className="icon" onClick={handleLogout} style={{ cursor: 'pointer' }} />
+        <LogOut
+          size={18}
+          className="icon"
+          onClick={handleLogout}
+          style={{ cursor: "pointer" }}
+        />
       </div>
     </div>
   );
