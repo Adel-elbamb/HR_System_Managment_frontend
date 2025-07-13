@@ -35,6 +35,46 @@ const initialState = {
   deductionType: "",
 };
 
+const requiredFields = [
+  "firstName",
+  "lastName",
+  "email",
+  "phone",
+  "salary",
+  "address",
+  "defaultCheckInTime",
+  "defaultCheckOutTime",
+  "gender",
+  "nationality",
+  "nationalId",
+  "birthdate",
+  "department",
+  "overtimeValue",
+  "overtimeType",
+  "deductionValue",
+  "deductionType"
+];
+
+const fieldDisplayNames = {
+  firstName: "First Name",
+  lastName: "Last Name",
+  email: "Email",
+  phone: "Phone Number",
+  salary: "Salary",
+  address: "Address",
+  defaultCheckInTime: "Check-in Time",
+  defaultCheckOutTime: "Check-out Time",
+  gender: "Gender",
+  nationality: "Nationality",
+  nationalId: "National ID",
+  birthdate: "Birthdate",
+  department: "Department",
+  overtimeValue: "Overtime Value",
+  overtimeType: "Overtime Type",
+  deductionValue: "Deduction Value",
+  deductionType: "Deduction Type"
+};
+
 const genderOptions = [
   { value: 'male', label: 'Male' },
   { value: 'female', label: 'Female' },
@@ -93,12 +133,23 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
     e.preventDefault();
 
     const errors = {};
-    
+
+    // Check for empty required fields
+    requiredFields.forEach(field => {
+      if (
+        form[field] === "" ||
+        form[field] === null ||
+        form[field] === undefined
+      ) {
+        errors[field] = `${fieldDisplayNames[field] || field} is required.`;
+      }
+    });
+
     // Phone number validation
     if (form.phone && form.phone.length !== 11) {
       errors.phone = "Phone number must be exactly 11 digits.";
     }
-    
+
     // Birthdate validation
     if (form.birthdate) {
       const selectedDate = new Date(form.birthdate);
@@ -107,16 +158,10 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
         errors.birthdate = "Birthdate cannot be in the future.";
       }
     }
-    
-    if (form.overtimeValue === null || form.overtimeValue === "") {
-      errors.overtimeValue = "Overtime value is required and must be a number.";
-    }
-    if (form.deductionValue === null || form.deductionValue === "") {
-      errors.deductionValue = "Deduction value is required and must be a number.";
-    }
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      setError("Please fill in all required fields correctly.");
       setLoading(false);
       return;
     }
@@ -397,9 +442,8 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       name="firstName"
                       className={styles.outlinedInput}
                       placeholder=" "
-                      value={form.firstName}
+                      value={form.firstName || ""}
                       onChange={handleChange}
-                      required
                     />
                     <label className={styles.outlinedLabel}>First Name</label>
                   </div>
@@ -411,9 +455,8 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       name="lastName"
                       className={styles.outlinedInput}
                       placeholder=" "
-                      value={form.lastName}
+                      value={form.lastName || ""}
                       onChange={handleChange}
-                      required
                     />
                     <label className={styles.outlinedLabel}>Last Name</label>
                   </div>
@@ -428,7 +471,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     placeholder=" "
                     value={form.email}
                     onChange={handleChange}
-                    required
                     type="email"
                   />
                   <label className={styles.outlinedLabel}>Email</label>
@@ -443,7 +485,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     placeholder=" "
                     value={form.phone}
                     onChange={handleChange}
-                    required
                     maxLength="11"
                     pattern="[0-9]{11}"
                   />
@@ -459,7 +500,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     placeholder=" "
                     value={form.salary}
                     onChange={handleChange}
-                    required
                     type="number"
                   />
                   <label className={styles.outlinedLabel}>Salary</label>
@@ -474,7 +514,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     placeholder=" "
                     value={form.address}
                     onChange={handleChange}
-                    required
                   />
                   <label className={styles.outlinedLabel}>Address</label>
                 </div>
@@ -537,7 +576,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       placeholder=" "
                       value={form.nationality}
                       onChange={handleChange}
-                      required
                     />
                     <label className={styles.outlinedLabel}>Nationality</label>
                   </div>
@@ -552,7 +590,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     placeholder=" "
                     value={form.nationalId}
                     onChange={handleChange}
-                    required
                   />
                   <label className={styles.outlinedLabel}>National ID</label>
                 </div>
@@ -567,7 +604,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     placeholder=" "
                     value={form.birthdate}
                     onChange={handleChange}
-                    required
                     type="text"
                     pattern="\d{4}-\d{2}-\d{2}"
                     onFocus={(e) => e.target.type = "date"}
@@ -623,7 +659,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       value={form.overtimeValue ?? ""}
                       onChange={handleChange}
                       type="number"
-                      required
                     />
                     <label className={styles.outlinedLabel}>Overtime Value</label>
                   </div>
@@ -658,7 +693,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       value={form.deductionValue ?? ""}
                       onChange={handleChange}
                       type="number"
-                      required
                     />
                     <label className={styles.outlinedLabel}>Deduction Value</label>
                   </div>
