@@ -1,28 +1,51 @@
-.container {
-  padding: 32px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.employeesPage {
+  background: #f8f9fb;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100vh;
+}
+
+.pageTitle {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+
+.employeesContainer {
+  width: 90rem;
+  margin: 0 auto 2rem auto;
+  padding: 2rem 2.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: none;
 }
 
 .card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
   max-width: none;
   width: 100%;
-  overflow: hidden;
-  margin-bottom: 32px;
+  overflow: visible;
+  margin-bottom: 0;
 }
 
 .header {
-  background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 100%);
-  color: #fff;
-  padding: 24px 32px 16px 32px;
+  background: none;
+  color: #222;
+  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-radius: 10px 10px 0 0;
+  justify-content: space-evenly;
+  border-radius: 0;
+  margin-bottom: 1rem;
 }
 
 .headerTitle {
@@ -52,14 +75,14 @@
   transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.15s;
   cursor: pointer;
   display: inline-block;
-  box-shadow: 0 2px 8px rgba(56,189,248,0.13);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.13);
 }
 
 .actionBtn:hover,
 .actionBtn:focus {
   background: #2563eb;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(56,189,248,0.22);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.22);
   transform: scale(1.07);
   filter: brightness(1.08);
 }
@@ -71,7 +94,8 @@
   margin-bottom: 24px;
 }
 
-.searchInput, .dateInput {
+.searchInput,
+.dateInput {
   border: 2px solid #1a2233;
   border-radius: 8px;
   padding: 8px 16px;
@@ -82,7 +106,8 @@
   transition: border-color 0.2s;
 }
 
-.searchInput:focus, .dateInput:focus {
+.searchInput:focus,
+.dateInput:focus {
   border-color: #111a2c;
 }
 
@@ -162,44 +187,47 @@
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
   transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.15s;
-   box-shadow: 0 2px 8px rgba(26,34,51,0.07); 
+  box-shadow: 0 2px 8px rgba(26, 34, 51, 0.07);
 }
 
 .actionBtnTable.view {
   background: #2563eb;
   color: #fff;
 }
+
 .actionBtnTable.view:hover {
   background: #1741a6;
   color: #fff;
   transform: scale(1.09);
-  box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.18);
 }
 
 .actionBtnTable.edit {
   background: #f59e42;
   color: #fff;
 }
+
 .actionBtnTable.edit:hover {
   background: #c97a13;
   color: #fff;
   transform: scale(1.09);
-  box-shadow: 0 4px 16px rgba(245,158,66,0.18);
+  box-shadow: 0 4px 16px rgba(245, 158, 66, 0.18);
 }
 
 .actionBtnTable.delete {
   background: #ef4444;
   color: #fff;
 }
+
 .actionBtnTable.delete:hover {
   background: #b91c1c;
   color: #fff;
   transform: scale(1.09);
-  box-shadow: 0 4px 16px rgba(239,68,68,0.18);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.18);
 }
 
 .actionBtnTable i {
@@ -226,17 +254,41 @@
   cursor: pointer;
 }
 
-.pageBtn.active, .pageBtn:hover {
+.pageBtn.active,
+.pageBtn:hover {
   background: #1a2233;
   color: #fff;
   transform: scale(1.08);
 }
 
 @media (max-width: 600px) {
-  .card { padding: 0; }
-  .header { flex-direction: column; align-items: flex-start; padding: 18px 12px 10px 12px; }
-  .headerTitle { font-size: 1.2rem; }
-  .table th, .table td { padding: 8px 8px 8px 12px; font-size: 0.98rem; }
-  .searchGroup { flex-direction: column; gap: 8px; }
-  .buttonGroup { flex-direction: column; gap: 8px; }
-}  
+  .card {
+    padding: 0;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 12px 10px 12px;
+  }
+
+  .headerTitle {
+    font-size: 1.2rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 8px 8px 12px;
+    font-size: 0.98rem;
+  }
+
+  .searchGroup {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

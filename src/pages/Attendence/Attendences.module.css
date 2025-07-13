@@ -55,3 +55,32 @@
 /* .closeBtn:hover {
   background: #3b82f6;
 } */
+
+.attendencePage {
+  background: #f8f9fb;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100vh;
+}
+
+.pageTitle {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+
+.attendenceContainer {
+  width: 90rem;
+  margin: 0 auto 2rem auto;
+  padding: 2rem 2.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: none;
+}

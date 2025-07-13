@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getAllEmployees, deleteEmployee, updateEmployee, getEmployeeById } from "../../services/employee.services";
+import {
+  getAllEmployees,
+  deleteEmployee,
+  updateEmployee,
+  getEmployeeById,
+} from "../../services/employee.services";
 import AddEmployee from "./AddEmployee";
 import { useNavigate } from "react-router-dom";
 import styles from "./Employees.module.css";
@@ -10,10 +15,10 @@ const Employees = () => {
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const navigate = useNavigate();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("");
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
@@ -25,7 +30,7 @@ const Employees = () => {
       setEmployees(res.data || []);
       setTotalItems(res.data?.length || 0);
     } catch (err) {
-      console.error('Error fetching employees:', err);
+      console.error("Error fetching employees:", err);
       setEmployees([]);
       setTotalItems(0);
     } finally {
@@ -39,23 +44,24 @@ const Employees = () => {
 
   useEffect(() => {
     let filtered = [...employees];
-    
+
     if (searchTerm.trim()) {
-      filtered = filtered.filter(emp => 
-        emp.name && emp.name.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (emp) =>
+          emp.name && emp.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     if (dateFilter) {
-      filtered = filtered.filter(emp => {
+      filtered = filtered.filter((emp) => {
         const empDate = emp.hiringDate || emp.createdAt?.slice(0, 10);
         return empDate === dateFilter;
       });
     }
-    
+
     setFilteredEmployees(filtered);
     setTotalItems(filtered.length);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }, [employees, searchTerm, dateFilter]);
 
   const handleDelete = async (id) => {
@@ -77,19 +83,10 @@ const Employees = () => {
     setDateFilter("");
   };
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
+    <div className={styles.employeesPage}>
+      <div className={styles.pageTitle}>Employee Management</div>
+      <div className={styles.employeesContainer}>
         <div className={styles.header}>
-          <div>
-            <div className={styles.headerTitle}>Employee Management</div>
-            <div className={styles.headerSubtitle}>Manage your employees, view profiles, and track performance.</div>
-          </div>
-          <div className={styles.buttonGroup}>
-            <button className={styles.actionBtn} onClick={() => navigate("/deleted-employees")}>View Deleted Employees</button>
-            <button className={styles.actionBtn} onClick={() => navigate("/add-employee")}>Add Employee</button>
-          </div>
-        </div>
-        <div style={{ padding: 32 }}>
           <div className={styles.searchGroup}>
             <input
               type="text"
@@ -108,10 +105,26 @@ const Employees = () => {
               Clear Filters
             </button>
           </div>
-          <div style={{ marginBottom: 16, color: '#888', fontSize: 14 }}>
-            <h4 style={{ color: '#1a2233', marginBottom: 0 }}>Employees</h4>
+          <div className={styles.buttonGroup}>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/deleted-employees")}
+            >
+              View Deleted Employees
+            </button>
+            <button
+              className="btn btn-success"
+              onClick={() => navigate("/add-employee")}
+            >
+              Add Employee
+            </button>
           </div>
-          <div style={{ overflowX: 'auto' }}>
+        </div>
+        <div style={{ padding: 32 }}>
+          <div style={{ marginBottom: 16, color: "#888", fontSize: 14 }}>
+            <h4 style={{ color: "#1a2233", marginBottom: 0 }}>Employees</h4>
+          </div>
+          <div style={{ overflowX: "auto" }}>
             <table className={styles.table}>
               <thead>
                 <tr>
@@ -126,13 +139,16 @@ const Employees = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                    <td colSpan="6" style={{ textAlign: "center" }}>
                       Loading...
                     </td>
                   </tr>
                 ) : currentEmployees.length === 0 ? (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: 'center', color: '#888' }}>
+                    <td
+                      colSpan="6"
+                      style={{ textAlign: "center", color: "#888" }}
+                    >
                       {filteredEmployees.length === 0
                         ? "No employees match your search criteria."
                         : "No employees found."}
@@ -142,7 +158,9 @@ const Employees = () => {
                   currentEmployees.map((emp) => (
                     <tr key={emp._id}>
                       <td className="text-capitalize">{emp.name}</td>
-                      <td><span className={styles.badge}>{emp.department}</span></td>
+                      <td>
+                        <span className={styles.badge}>{emp.department}</span>
+                      </td>
                       <td>{emp.hiringDate || emp.createdAt?.slice(0, 10)}</td>
                       <td>{emp.phone}</td>
                       <td>{emp.email}</td>
@@ -158,7 +176,9 @@ const Employees = () => {
                           <button
                             className={`${styles.actionBtnTable} ${styles.edit}`}
                             title="Edit"
-                            onClick={() => navigate(`/edit-employee/${emp._id}`)}
+                            onClick={() =>
+                              navigate(`/edit-employee/${emp._id}`)
+                            }
                           >
                             <i className="fas fa-edit"></i>
                           </button>
@@ -189,7 +209,9 @@ const Employees = () => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i + 1}
-                  className={`${styles.pageBtn} ${currentPage === i + 1 ? styles.active : ""}`}
+                  className={`${styles.pageBtn} ${
+                    currentPage === i + 1 ? styles.active : ""
+                  }`}
                   onClick={() => handlePageChange(i + 1)}
                   disabled={currentPage === i + 1}
                 >
@@ -212,4 +234,3 @@ const Employees = () => {
 };
 
 export default Employees;
-

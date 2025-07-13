@@ -1,132 +1,167 @@
 .pageBackground {
-    background-color: #f4f6f8;
-    min-height: 100vh;
-    padding: 2rem 0;
-  }
-  
-  .payrollContainer {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #2c3e50;
-  }
-  
-  .subtitle {
-    font-size: 1rem;
-    color: #7f8c8d;
-  }
-  
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.payrollBackground {
+  background: #f8f9fb;
+  min-height: 100vh;
+  padding: 32px 0;
+}
+
+.payrollPage {
+  background: #f8f9fb;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100vh;
+}
+
+.pageTitle {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+
+.payrollContainer {
+  width: 90rem;
+  margin: 0 auto 2rem auto;
+  padding: 2rem 2.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+/* .payrollContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 20rem !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), 0 1.5px 6px 0 rgba(0, 0, 0, 0.18);
+} */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.searchInput {
+  border: 1px solid #d1d9e0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+.searchInput::placeholder {
+  color: #a0a8b0;
+  font-style: italic;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+  background: #ffffff;
+}
+
+.clearButton {
+  background-color: #7f8c8d;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.clearButton:hover {
+  background-color: #6c757d;
+}
+
+.payrollTable {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.payrollTable th,
+.payrollTable td {
+  padding: 1rem;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.payrollTable th {
+  background-color: #3498db;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.payrollTable tbody tr {
+  background-color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background-color: #f1f5f9;
+}
+
+.actionIcon {
+  font-size: 1.2rem;
+  color: #3498db;
+  transition: color 0.2s ease;
+}
+
+.actionIcon:hover {
+  color: #2980b9;
+}
+
+@media (max-width: 768px) {
   .searchInput {
-    border: 1px solid #d1d9e0;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    background: #f9fafb;
+    margin-bottom: 1rem;
   }
-  
-  .searchInput::placeholder {
-    color: #a0a8b0;
-    font-style: italic;
-  }
-  
-  .searchInput:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
-    background: #ffffff;
-  }
-  
-  .clearButton {
-    background-color: #7f8c8d;
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-  }
-  
-  .clearButton:hover {
-    background-color: #6c757d;
-  }
-  
-  .payrollTable {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
+
   .payrollTable th,
   .payrollTable td {
-    padding: 1rem;
-    font-size: 0.95rem;
-    text-align: left;
-  }
-  
-  .payrollTable th {
-    background-color: #3498db;
-    color: #ffffff;
-    font-weight: 600;
-  }
-  
-  .payrollTable tbody tr {
-    background-color: #ffffff;
-    transition: background-color 0.2s ease;
-  }
-  
-  .tableRow:hover {
-    background-color: #f1f5f9;
-  }
-  
-  .actionIcon {
-    font-size: 1.2rem;
-    color: #3498db;
-    transition: color 0.2s ease;
-  }
-  
-  .actionIcon:hover {
-    color: #2980b9;
-  }
-  
-  @media (max-width: 768px) {
-    .searchInput {
-      margin-bottom: 1rem;
-    }
-  
-    .payrollTable th,
-    .payrollTable td {
-      font-size: 0.85rem;
-      padding: 0.75rem;
-    }
-  
-    .title {
-      font-size: 1.5rem;
-    }
-  
-    .subtitle {
-      font-size: 0.9rem;
-    }
+    font-size: 0.85rem;
+    padding: 0.75rem;
   }
 
+  .title {
+    font-size: 1.5rem;
+  }
 
-  .modalOverlay {
+  .subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -220,6 +255,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -230,6 +266,7 @@
     transform: translateY(-20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
