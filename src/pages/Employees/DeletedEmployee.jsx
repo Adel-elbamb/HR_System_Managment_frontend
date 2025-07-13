@@ -76,52 +76,20 @@ const DeletedEmployee = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <div className={styles.headerTitle}>Deleted Employees</div>
-          <button
-            className={styles.actionBtn}
-            onClick={() => navigate("/employees")}
-          >
-            <i className="bi bi-arrow-left me-1"></i>Back to Employees
-          </button>
-        </div>
-        <div style={{ padding: 32 }}>
-          {error && (
-            <div className="alert alert-danger alert-dismissible fade show" role="alert">
-              {error}
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => setError("")}
-                aria-label="Close"
-              ></button>
-            </div>
-          )}
-          <div className={styles.searchGroup}>
-            <input
-              type="text"
-              className={styles.searchInput}
-              placeholder="Search by name..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-            <select
-              className={styles.selectFilter}
-              value={departmentFilter}
-              onChange={e => setDepartmentFilter(e.target.value)}
+    <div className={`container-fluid ${styles.container}`}>
+      <div className="row justify-content-center">
+        <div className={`col-12 col-md-10 col-lg-8 ${styles.card}`}>
+          <div className={styles.header}>
+            <div className={styles.headerTitle}>Deleted Employees</div>
+            <button
+              className={styles.actionBtn}
+              onClick={() => navigate("/employees")}
             >
-              <option value="">All Departments</option>
-              {departmentOptions.map(dep => (
-                <option key={dep} value={dep}>
-                  {dep}
-                </option>
-              ))}
-            </select>
+              <i className="bi bi-arrow-left me-1"></i>Back to Employees
+            </button>
           </div>
-          <div style={{ maxHeight: "500px", overflowY: "auto" }}>
-            <table className={styles.table}>
+          <div style={{ padding: 24 }} className="table-responsive">
+            <table className={`${styles.table} table table-striped table-hover`}>
               <thead>
                 <tr>
                   <th>Name</th>

@@ -415,53 +415,51 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
   return (
     <div className={styles.pageBackground}>
       <div className={styles.centerCard}>
-        <div className={styles.headerRow}>
-        <h3 className="mb-0 h4 text-center text-dark">Add Employee</h3>
-
-        </div>
-        <div className="card shadow border-0 rounded-3">
-         
-          <div className="card-body p-4">
-            {error && (
-              <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                {error}
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setError("")}
-                  aria-label="Close"
-                ></button>
-              </div>
-            )}
-            <form onSubmit={handleSubmit}>
-              <div className="row g-3 mb-3">
-                <div className="col-md-6">
-                  <ErrorDisplay error={fieldErrors.firstName} />
-                  <div className={styles.inputGroup}>
-                    <input
-                      name="firstName"
-                      className={styles.outlinedInput}
-                      placeholder=" "
-                      value={form.firstName || ""}
-                      onChange={handleChange}
-                    />
-                    <label className={styles.outlinedLabel}>First Name</label>
+          <div className={styles.headerRow}>
+            <h3 className="mb-0 h4 text-center text-dark">Add Employee</h3>
+          </div>
+          <div className="card shadow border-0 rounded-3">
+            <div className="card-body p-4">
+              {error && (
+                <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                  {error}
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setError("")}
+                    aria-label="Close"
+                  ></button>
+                </div>
+              )}
+              <form onSubmit={handleSubmit}>
+                <div className="row g-3 mb-3">
+                  <div className="col-md-6">
+                    <ErrorDisplay error={fieldErrors.firstName} />
+                    <div className={styles.inputGroup}>
+                      <input
+                        name="firstName"
+                        className={styles.outlinedInput}
+                        placeholder=" "
+                        value={form.firstName || ""}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.outlinedLabel}>First Name</label>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <ErrorDisplay error={fieldErrors.lastName} />
+                    <div className={styles.inputGroup}>
+                      <input
+                        name="lastName"
+                        className={styles.outlinedInput}
+                        placeholder=" "
+                        value={form.lastName || ""}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.outlinedLabel}>Last Name</label>
+                    </div>
                   </div>
                 </div>
-                <div className="col-md-6">
-                  <ErrorDisplay error={fieldErrors.lastName} />
-                  <div className={styles.inputGroup}>
-                    <input
-                      name="lastName"
-                      className={styles.outlinedInput}
-                      placeholder=" "
-                      value={form.lastName || ""}
-                      onChange={handleChange}
-                    />
-                    <label className={styles.outlinedLabel}>Last Name</label>
-                  </div>
-                </div>
-              </div>
               <div className="mb-3">
                 <ErrorDisplay error={fieldErrors.email} />
                 <div className={styles.inputGroup}>
