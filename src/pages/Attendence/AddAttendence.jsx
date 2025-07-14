@@ -5,6 +5,7 @@ import {
   updateAttendence,
 } from "../../services/Attendence.services";
 import { getAllEmployees } from "../../services/employee.services";
+import { toast } from "react-hot-toast";
 
 export default function AddAttendence({ isOpen, onClose, initialData }) {
   if (!isOpen) return null;
@@ -13,7 +14,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
   const [employeeId, setEmployeeId] = useState("");
   const [checkInTime, setCheckInTime] = useState("");
   const [checkOutTime, setCheckOutTime] = useState("");
-  const [status, setStatus] = useState("casual");
+  const [status, setStatus] = useState("present");
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -35,24 +36,22 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
       );
       setCheckInTime(initialData.checkInTime || "");
       setCheckOutTime(initialData.checkOutTime || "");
-      setStatus(initialData.status || "casual");
+      setStatus(initialData.status || "present");
     } else {
       setEmployeeId("");
       setCheckInTime("");
       setCheckOutTime("");
-      setStatus("casual");
+      setStatus("present");
     }
   }, [initialData, isOpen]);
 
   const handleSubmit = async () => {
     let payload;
     if (status === "absent") {
-      let checkInTime = "00:00";
-      let checkOutTime = "00:00";
       payload = {
         employeeId,
-        checkInTime,
-        checkOutTime,
+        checkInTime: "00:00",
+        checkOutTime: "00:00",
         status,
       };
     } else {
@@ -66,16 +65,19 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
 
     try {
       if (initialData) {
+        const confirmed = window.confirm("Are you sure you want to update this attendance?");
+        if (!confirmed) return;
+
         await updateAttendence(initialData._id, payload);
+        toast.success("Attendance updated successfully");
       } else {
         await createAttendence(payload);
+        toast.success("Attendance created successfully");
       }
       onClose();
     } catch (error) {
-      console.error(
-        "Error saving attendance:",
-        error.response?.data || error.message
-      );
+      console.error("Error saving attendance:", error.response?.data || error.message);
+      toast.error("Failed to save attendance. Please try again.");
     }
   };
 
@@ -123,7 +125,7 @@ export default function AddAttendence({ isOpen, onClose, initialData }) {
               className={style.input}
               value={checkOutTime}
               onChange={(e) => setCheckOutTime(e.target.value)}
-            />{" "}
+            />
           </>
         )}
 
