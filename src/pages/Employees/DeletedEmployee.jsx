@@ -88,6 +88,29 @@ const DeletedEmployee = () => {
               <i className="bi bi-arrow-left me-1"></i>Back to Employees
             </button>
           </div>
+          {/* Department Filter */}
+          <div style={{ padding: '24px 24px 0 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
+            <label htmlFor="departmentFilter" style={{ marginRight: 8, fontWeight: 500 }}>Department:</label>
+            <select
+              id="departmentFilter"
+              className={styles.selectFilter}
+              value={departmentFilter}
+              onChange={e => setDepartmentFilter(e.target.value)}
+            >
+              <option value="">All Departments</option>
+              {departmentOptions.map(dep => (
+                <option key={dep} value={dep}>{dep}</option>
+              ))}
+            </select>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search by name..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{ marginLeft: 16 }}
+            />
+          </div>
           <div style={{ padding: 24 }} className="table-responsive">
             <table className={`${styles.table} table table-striped table-hover`}>
               <thead>
