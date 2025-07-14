@@ -8,28 +8,50 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const getLastWorkingDay = (dateStr, holidayDates) => {
+    let date = new Date(dateStr);
+    for (let i = 0; i < 10; i++) { 
+      date.setDate(date.getDate() - 1);
+      const checkStr = date.toISOString().slice(0, 10);
+      if (!holidayDates.includes(checkStr)) {
+        return checkStr;
+      }
+    }
+    return null;
+  };
+  const getLastWorkingDayOrToday = (holidayDates) => {
+  const now = new Date();
+  for (let i = 0; i < 10; i++) {
+    const tryDate = new Date(now);
+    tryDate.setDate(now.getDate() - i);
+    const dateStr = tryDate.toISOString().slice(0, 10);
+    if (!holidayDates.includes(dateStr)) return dateStr;
+  }
+  return now.toISOString().slice(0, 10);
+};
   const fetchData = async () => {
     try {
       setLoading(true);
 
-      const [employeeRes, attendanceRes, departmentRes] = await Promise.all([
+      const [employeeRes, attendanceRes, departmentRes, holidaysRes] = await Promise.all([
         getAllEmployees(),
         getAttendences(),
-        axiosInstance.get("/department/")
+        axiosInstance.get("/department/"),
+        axiosInstance.get("/holiday/")
       ]);
-
+      const holidays = holidaysRes?.data?.holiday || holidaysRes?.data || [];
+      const holidayDates = holidays.map(h => h.date);
       const employeesData = employeeRes?.data || [];
       const attendance = attendanceRes || [];
       console.log("Attendance Data:", attendance);
       const departmentsData = departmentRes?.data?.data || departmentRes?.data || [];
-      
+
       const now = new Date();
-      const todayStr = now.toISOString().slice(0, 10);
+      const todayStr = getLastWorkingDayOrToday(holidayDates);
 
       const yesterday = new Date(now);
       yesterday.setDate(now.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().slice(0, 10);
+      const yesterdayStr = getLastWorkingDay(todayStr, holidayDates);
 
       const getDateStr = (dateStr) => {
         if (!dateStr) return null;
@@ -74,7 +96,6 @@ const Dashboard = () => {
 
       const departmentsCountNow = departmentsData.length;
 
-      // Percentage change function
       const calcChange = (current, previous) => {
         if (previous === 0) return current === 0 ? 0 : 100;
         return Math.round(((current - previous) / previous) * 100);
