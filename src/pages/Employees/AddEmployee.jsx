@@ -134,7 +134,7 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
 
     const errors = {};
 
-    // Check for empty required fields
+    
     requiredFields.forEach(field => {
       if (
         form[field] === "" ||
@@ -145,12 +145,10 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
       }
     });
 
-    // Phone number validation
     if (form.phone && form.phone.length !== 11) {
       errors.phone = "Phone number must be exactly 11 digits.";
     }
 
-    // Birthdate validation
     if (form.birthdate) {
       const selectedDate = new Date(form.birthdate);
       const today = new Date();
@@ -201,7 +199,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
       let errorsObj = {};
       setError("");
       
-      // If backendErrors.message is a stringified array, parse it
       if (backendErrors && typeof backendErrors.message === "string") {
         try {
           const parsed = JSON.parse(backendErrors.message);
@@ -351,11 +348,9 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
           setFieldErrors(errorsObj);
           return;
         } catch (e) {
-          // fallback to generic error
         }
       }
 
-      // fallback: handle as before
       if (Array.isArray(backendErrors)) {
         const errorsObj = handleBackendValidationErrors(backendErrors);
         setFieldErrors(errorsObj);
@@ -374,7 +369,6 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
     navigate("/employees");
   };
 
-  // Department options from API
   const departmentOptions = departments.map(dept => ({ value: dept._id, label: dept.departmentName }));
 
   const customSelectStyles = {

@@ -85,67 +85,76 @@ const Employees = () => {
   };
   return (
     <div className="container">
-      <div className="card">
-        <div className="header">
-          <div className={styles.pageTitle} >Employee Management</div>
-        </div>
-        <div className="card-body">
-          <div className={`${styles.header} row align-items-center mb-3`}>
-            <div className={`col-12 col-md-7 ${styles.searchGroup} mb-2 mb-md-0`}>
+      <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+        <h1 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 0 }}>Employee Management</h1>
+      </div>
+      <div style={{ color: '#6c757d', fontSize: '1.1rem', marginBottom: '16px' }}>
+        Manage your employees, view profiles, and track performance.
+      </div>
+      <div className="d-flex justify-content-end align-items-center gap-3 mb-4 flex-wrap">
+        <button
+          className="btn btn-outline-danger btn-lg rounded-pill shadow-lg px-4 d-flex align-items-center"
+          onClick={() => navigate("/deleted-employees")}
+          style={{ fontWeight: 700, letterSpacing: 1, fontSize: '1.1rem' }}
+        >
+          <i className="fas fa-trash-alt me-2"></i>
+          View Deleted Employees
+        </button>
+        <button
+          className="btn btn-primary btn-lg rounded-pill shadow-sm d-flex align-items-center"
+          onClick={() => navigate("/add-employee")}
+          style={{ fontWeight: 600 }}
+        >
+          <i className="fas fa-plus me-2"></i>
+          Add Employee
+        </button>
+      </div>
+      <div className="card-body">
+        <div className="row justify-content-center align-items-center mb-4">
+          <div className="col-12 col-md-8">
+            <div className="input-group input-group-lg shadow-sm justify-content-center flex-wrap flex-md-nowrap">
+              <span className="input-group-text bg-white border-end-0"><i className="fas fa-search"></i></span>
               <input
                 type="text"
-                className={styles.searchInput}
+                className="form-control border-start-0 border-end-0"
                 placeholder="Search by name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ borderRadius: 0 }}
               />
-              <div className="mb-2" style={{ width: '100%' }}>
-                <div className="input-group">
-                  <span className="input-group-text" id="calendar-addon">
-                    <i className="fas fa-calendar-alt"></i>
-                  </span>
-                  <input
-                    type="date"
-                    id="dateFilter"
-                    className={`form-control ${styles.dateInput}`}
-                    aria-label="Filter by hiring date"
-                    aria-describedby="calendar-addon"
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    placeholder="Filter by hiring date"
-                  />
-                  {dateFilter && (
-                    <button
-                      className="btn btn-outline-secondary"
-                      type="button"
-                      onClick={() => setDateFilter("")}
-                      tabIndex={0}
-                      aria-label="Clear date filter"
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  )}
-                </div>
-              </div>
-              <button className={styles.clearBtn} onClick={clearFilters}>
-              Clear Filter
-              </button>
-            </div>
-            <div className={`col-12 col-md-5 d-flex justify-content-end ${styles.buttonGroup}`}>
+              <span className="input-group-text bg-white border-end-0 border-start-0"><i className="fas fa-calendar-alt"></i></span>
+              <input
+                type="date"
+                id="dateFilter"
+                className="form-control border-start-0 border-end-0"
+                aria-label="Filter by hiring date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                style={{ borderRadius: 0, minWidth: 150 }}
+              />
+              {dateFilter && (
+                <button
+                  className="btn btn-outline-secondary border-start-0 border-end-0"
+                  type="button"
+                  onClick={() => setDateFilter("")}
+                  tabIndex={0}
+                  aria-label="Clear date filter"
+                  style={{ borderRadius: 0 }}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
               <button
-                className="btn btn-primary"
-                onClick={() => navigate("/deleted-employees")}
+                className="btn text-white fw-bold"
+                type="button"
+                onClick={clearFilters}
+                style={{ background: '#000', borderTopRightRadius: '2rem', borderBottomRightRadius: '2rem', fontWeight: 600 }}
               >
-                View Deleted Employees
-              </button>
-              <button
-                className="btn btn-success"
-                onClick={() => navigate("/add-employee")}
-              >
-                Add Employee
+                Clear Filter
               </button>
             </div>
           </div>
+        </div>
           <div style={{ padding: 32 }}>
             <div style={{ marginBottom: 16, color: "#888", fontSize: 14 }}>
               <h4 style={{ color: "#1a2233", marginBottom: 0 }}>Employees</h4>
@@ -256,7 +265,7 @@ const Employees = () => {
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 
