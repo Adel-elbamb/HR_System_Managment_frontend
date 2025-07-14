@@ -1,58 +1,45 @@
  .employeesPage {
-  background: #f8f9fb;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  box-shadow: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
   min-height: 100vh;
+  background: #f8f9fb;
 }
 
-.pageTitle {
-  color: #2563eb;
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: left;
-  margin-top: 32px;
-  margin-left: 32px;
-  margin-bottom: 32px;
-  letter-spacing: 0.5px;
-}
 
-.employeesContainer {
-  width: 65rem;
-  margin: 0 auto 2rem auto;
-  padding: 2rem 2.5rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: none;
+.container {
+  padding: 0;
+  display: block;
+  justify-content: unset;
+  width: 100%;
+  max-width: none;
 }
 
 .card {
-  background: none;
-  border-radius: 0;
-  box-shadow: none;
-  max-width: none;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   width: 100%;
-  overflow: visible;
-  margin-bottom: 0;
+  max-width: none;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .header {
-  background: none;
-  color: #222;
-  padding: 0;
+  background: #fff;
+  color: #2563eb;
+  padding: 36px 48px 24px 48px;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  border-radius: 0;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  border-radius: 16px 16px 0 0;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 24px rgba(59, 179, 230, 0.08);
 }
 
-.headerTitle {
-  font-size: 1.7rem;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
 
 .headerSubtitle {
   font-size: 1.1rem;
@@ -65,26 +52,21 @@
 }
 
 .actionBtn {
-  background: #1a2233;
-  color: #fff;
+  background: #fff;
+  color: #1a2233;
   border: 2px solid #1a2233;
   border-radius: 8px;
   padding: 8px 22px;
   font-size: 1rem;
   font-weight: 600;
-  transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.15s;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s;
   cursor: pointer;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.13);
 }
 
-.actionBtn:hover,
-.actionBtn:focus {
-  background: #2563eb;
+.actionBtn:hover {
+  background: #1a2233;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.22);
-  transform: scale(1.07);
-  filter: brightness(1.08);
 }
 
 .searchGroup {
@@ -94,8 +76,7 @@
   margin-bottom: 24px;
 }
 
-.searchInput,
-.dateInput {
+.searchInput {
   border: 2px solid #1a2233;
   border-radius: 8px;
   padding: 8px 16px;
@@ -106,8 +87,23 @@
   transition: border-color 0.2s;
 }
 
-.searchInput:focus,
-.dateInput:focus {
+.searchInput:focus {
+  border-color: #111a2c;
+}
+
+.selectFilter {
+  border: 2px solid #1a2233;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  background: #f4f6fa;
+  color: #111;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 200px;
+}
+
+.selectFilter:focus {
   border-color: #111a2c;
 }
 
@@ -121,7 +117,11 @@
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
   cursor: pointer;
-  width: 100%;
+  width: 160px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .clearBtn:hover {
@@ -254,41 +254,27 @@
   cursor: pointer;
 }
 
-.pageBtn.active,
-.pageBtn:hover {
+.pageBtn.active, .pageBtn:hover {
   background: #1a2233;
   color: #fff;
   transform: scale(1.08);
 }
 
 @media (max-width: 600px) {
-  .card {
-    padding: 0;
-  }
+  .card { padding: 0; }
+  .header { flex-direction: column; align-items: flex-start; padding: 18px 12px 10px 12px; }
+  .headerTitle { font-size: 1.2rem; }
+  .table th, .table td { padding: 8px 8px 8px 12px; font-size: 0.98rem; }
+  .searchGroup { flex-direction: column; gap: 8px; }
+}
 
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 18px 12px 10px 12px;
-  }
-
-  .headerTitle {
-    font-size: 1.2rem;
-  }
-
-  .table th,
-  .table td {
-    padding: 8px 8px 8px 12px;
-    font-size: 0.98rem;
-  }
-
-  .searchGroup {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .buttonGroup {
-    flex-direction: column;
-    gap: 8px;
-  }
+.pageTitle {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
 }

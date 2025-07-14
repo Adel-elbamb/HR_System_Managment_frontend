@@ -84,10 +84,12 @@ const Employees = () => {
     setDateFilter("");
   };
   return (
-    <div className={`container-fluid ${styles.employeesPage}`}>
-      <div className={styles.pageTitle}>Employee Management</div>
-      <div className={`row justify-content-center`}>
-        <div className={`col-12 col-md-11 col-lg-10 ${styles.employeesContainer}`}>
+    <div className="container">
+      <div className="card">
+        <div className="header">
+          <div className={styles.pageTitle} >Employee Management</div>
+        </div>
+        <div className="card-body">
           <div className={`${styles.header} row align-items-center mb-3`}>
             <div className={`col-12 col-md-7 ${styles.searchGroup} mb-2 mb-md-0`}>
               <input
@@ -104,7 +106,7 @@ const Employees = () => {
                 onChange={(e) => setDateFilter(e.target.value)}
               />
               <button className={styles.clearBtn} onClick={clearFilters}>
-                Clear Filters
+              Clear Filter
               </button>
             </div>
             <div className={`col-12 col-md-5 d-flex justify-content-end ${styles.buttonGroup}`}>

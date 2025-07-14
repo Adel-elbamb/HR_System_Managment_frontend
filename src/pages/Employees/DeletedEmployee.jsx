@@ -78,7 +78,7 @@ const DeletedEmployee = () => {
   return (
     <div className={`container-fluid ${styles.container}`}>
       <div className="row justify-content-center">
-        <div className={`col-12 col-md-10 col-lg-8 ${styles.card}`}>
+        <div className={styles.card}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>Deleted Employees</div>
             <button

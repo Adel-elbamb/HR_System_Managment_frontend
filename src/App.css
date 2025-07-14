@@ -1,3 +1,11 @@
+html, body {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
 body{
   background-color: rgba(219, 234, 253, 1);
 }

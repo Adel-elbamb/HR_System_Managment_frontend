@@ -1,16 +1,20 @@
 .container {
-  padding: 32px 0;
-  display: flex;
-  justify-content: center;
+  padding: 0;
+  display: block;
+  justify-content: unset;
+  width: 100%;
+  max-width: none;
 }
 
 .card {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  max-width: none;
   width: 100%;
+  max-width: none;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .header {
@@ -114,7 +118,7 @@
 
 .searchInput:focus {
   border-color: #111a2c;
-}
+} 
 
 .selectFilter {
   border: 2px solid #1a2233;
