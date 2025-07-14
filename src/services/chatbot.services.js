@@ -276,9 +276,36 @@ The system handles all deductions automatically!`;
   return null; // Let AI handle other questions
 };
 
+// List of exact fixed questions (case-insensitive, trimmed)
+const fixedQuestions = [
+  "i want info about ahmed",
+  "tell me about ahmed",
+  "how do i add a new employee?",
+  "how do i calculate overtime pay?",
+  "what are the attendance rules?",
+  "how do i add a new department?",
+];
+
 const askChatBot = async (question) => {
   try {
     console.log("Sending question to chatbot:", question);
+
+    // Only answer with static response if exact match (case-insensitive, trimmed)
+    const normalizedQuestion = question.trim().toLowerCase();
+    if (fixedQuestions.includes(normalizedQuestion)) {
+      const hrResponse = getHRFriendlyResponse(question);
+      if (hrResponse) {
+        return {
+          success: true,
+          message: "HR-friendly static response",
+          data: {
+            question,
+            answer: hrResponse,
+            timestamp: new Date().toISOString(),
+          },
+        };
+      }
+    }
 
     // Check if the question is asking about a specific employee - more flexible pattern with typos
     // Only match if it's clearly asking about a person, not general topics
@@ -411,7 +438,11 @@ No worries though! Here's how to add someone new:
 
     // For all other questions, send to backend chatbot API
     const response = await api.post("/chatbot", { question });
-    const answer = response.data?.answer || response.data?.data?.answer || response.data?.data || response.data;
+    const answer =
+      response.data?.answer ||
+      response.data?.data?.answer ||
+      response.data?.data ||
+      response.data;
     return {
       success: true,
       message: "AI chatbot response",
