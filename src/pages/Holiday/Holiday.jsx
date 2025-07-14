@@ -89,30 +89,40 @@ const Holiday = () => {
   };
 
   return (
-    <div className={styles.holidayPage} dir="rtl">
-      {/* <h2 className={styles.title}>Holiday Management</h2> */}
-      {showError && <div className={styles.errorPopup}>{error}</div>}
-      <div className={styles.formSection}>
-         <h2 className={styles.title}>Holiday Management</h2>
-        <HolidayForm onAdd={handleAdd} />
-      </div>
-      {editingHoliday && (
-        <div className={styles.formSection}>
-          <HolidayForm
-            editingHoliday={editingHoliday}
-            onEdit={handleEdit}
-            onCancel={handleCancelEdit}
-            isUpdateForm={true}
-          />
+    <div className="container-fluid py-4" dir="rtl">
+      <div className="row justify-content-center">
+        <div className="col-12 d-flex justify-content-center">
+          <div
+            className="card shadow-lg w-100"
+            style={{ maxWidth: '1200px' }}
+          >
+            <div className="card-body px-2 px-md-4">
+              {showError && <div className={styles.errorPopup}>{error}</div>}
+              <div className={styles.formSection}>
+                <h2 className={styles.title}>Holiday Management</h2>
+                <HolidayForm onAdd={handleAdd} />
+              </div>
+              {editingHoliday && (
+                <div className={styles.formSection}>
+                  <HolidayForm
+                    editingHoliday={editingHoliday}
+                    onEdit={handleEdit}
+                    onCancel={handleCancelEdit}
+                    isUpdateForm={true}
+                  />
+                </div>
+              )}
+              <div className={styles.tableSection}>
+                <HolidayTable
+                  holidays={holidays}
+                  onEdit={setEditingHoliday}
+                  onDelete={handleDelete}
+                  loading={loading}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-      <div className={styles.tableSection}>
-        <HolidayTable
-          holidays={holidays}
-          onEdit={setEditingHoliday}
-          onDelete={handleDelete}
-          loading={loading}
-        />
       </div>
     </div>
   );

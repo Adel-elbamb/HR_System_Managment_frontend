@@ -155,184 +155,194 @@ function Payroll() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className={styles.payrollPage}>
-      {/* <div className={styles.pageTitle}>Payroll Management</div> */}
-      <div className={styles.payrollContainer}>
-        
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3">
-          <div className={styles.pageTitle} >Payroll Management</div>
-          <div className= "col-md-3 ms-auto m-2">
-            <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
-              <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
-                Employee
-              </span>
-              <input
-                type="text"
-                className="form-control form-control-sm bg-transparent border-0"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                placeholder="Enter employee name..."
+    <div className="container-fluid py-4">
+      <div className="row justify-content-center">
+        <div className="col-12">
+          <div className="card shadow-lg w-100" style={{ maxWidth: '1200px', minWidth: 0 }}>
+            <div className="card-body px-2 px-md-4">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3">
+                <div className={styles.pageTitle}>Payroll Management</div>
+                <div className="col-md-3 ms-auto m-2">
+                  <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
+                    <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
+                      Employee
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control form-control-sm bg-transparent border-0"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      placeholder="Enter employee name..."
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex align-items-center gap-2 w-100 flex-wrap mb-3">
+                <div className="input-group input-group-sm rounded-pill shadow-sm flex-grow-1" style={{ minWidth: 0, maxWidth: 250 }}>
+                  <span className="input-group-text bg-white border-0 text-primary fw-semibold">
+                    From
+                  </span>
+                  <input
+                    type="date"
+                    className="form-control border-0"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
+                <div className="input-group input-group-sm rounded-pill shadow-sm flex-grow-1" style={{ minWidth: 0, maxWidth: 250 }}>
+                  <span className="input-group-text bg-white border-0 text-primary fw-semibold">
+                    To
+                  </span>
+                  <input
+                    type="date"
+                    className="form-control border-0"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                  style={{ height: "34px", width: "34px" }}
+                  onClick={applyDateFilter}
+                >
+                  <i className="bi bi-filter"></i>
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm rounded-pill flex-shrink-0"
+                  onClick={resetFilters}
+                >
+                  <i className="bi bi-x-lg me-1"></i> Reset
+                </button>
+              </div>
+              {error && (
+                <Alert variant="danger" className="mt-4">
+                  {error}
+                </Alert>
+              )}
+              {!error && currentItems.length === 0 && (
+                <Alert variant="info" className="mt-4">
+                  No salary records found for the selected filters. Try adjusting your
+                  search or date range.
+                </Alert>
+              )}
+              {currentItems.length > 0 && (
+                <div className="table-responsive mt-4">
+                  <Table striped>
+                    <thead>
+                      <tr>
+                        <th className="text-center">Employee Name</th>
+                        <th className="text-center">Department</th>
+                        <th className="text-center">Salary</th>
+                        <th className="text-center">Attended Days</th>
+                        <th className="text-center">Absent Days</th>
+                        <th className="text-center">Overtime</th>
+                        <th className="text-center">Deduct Time</th>
+                        <th className="text-center">Total Bouns</th>
+                        <th className="text-center">Total Deduction</th>
+                        <th className="text-center">Net salary</th>
+                        <th className="text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentItems.map((record) => (
+                        <tr key={record._id}>
+                          <td className="text-center">
+                            {record.employeeId
+                              ? `${record.employeeId.firstName || ""} ${
+                                  record.employeeId.lastName || ""
+                                }`
+                              : "N/A"}
+                          </td>
+                          <td className="text-center">
+                            {record.employeeId.department.departmentName}
+                          </td>
+                          <td className="text-center">{record.employeeId.salary}</td>
+                          <td className="text-center">{record.attendedDays}</td>
+                          <td className="text-center">{record.absentDays}</td>
+                          <td className="text-center">{record.totalOvertime}</td>
+                          <td className="text-center">{record.totalDeduction}</td>
+                          <td className="text-center">
+                            {record.totalBonusAmount !== undefined &&
+                            record.totalBonusAmount !== null
+                              ? Number(record.totalBonusAmount).toFixed(2)
+                              : "0.00"}
+                          </td>
+                          <td className="text-center">
+                            {record.totalDeductionAmount !== undefined &&
+                            record.totalDeductionAmount !== null
+                              ? Number(record.totalDeductionAmount).toFixed(2)
+                              : "0.00"}
+                          </td>
+                          <td className="text-center">
+                            {record.netSalary !== undefined &&
+                            record.netSalary !== null
+                              ? Number(record.netSalary).toFixed(2)
+                              : "0.00"}
+                          </td>
+                          <td className="text-center">
+                            <div className="d-inline-flex align-items-center">
+                              <button
+                                className="btn btn-sm btn-outline-primary rounded-circle me-2"
+                                title="View"
+                                onClick={() => handleView(record._id)}
+                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <i className="fas fa-eye"></i>
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-secondary rounded-circle me-2"
+                                title="Edit"
+                                onClick={() => handleEdit(record)}
+                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-danger rounded-circle"
+                                title="Delete"
+                                onClick={() => handleDelete(record._id)}
+                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              )}
+              <ReactPaginate
+                previousLabel={"«"}
+                nextLabel={"»"}
+                breakLabel={"..."}
+                pageCount={Math.ceil(filteredPayroll.length / itemsPerPage)}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination justify-content-end mb-2"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                breakClassName={"page-item disabled"}
+                breakLinkClassName={"page-link"}
+                activeClassName={"active"}
               />
+              {viewPayroll && (
+                <ViewPayroll
+                  isOpen={viewPayroll}
+                  onClose={() => {
+                    setViewPayroll(false);
+                    setViewData(null);
+                  }}
+                  data={viewData}
+                />
+              )}
             </div>
           </div>
         </div>
-
-        <div
-          className="d-flex align-items-center flex-wrap gap-2"
-          style={{ maxWidth: "1000px", marginTop: "20px", marginLeft: "200px" }}
-        >
-          <div className="position-relative" style={{ width: "170px" }}>
-            <div className="input-group input-group-sm rounded-pill shadow-sm">
-              <span className="input-group-text bg-white border-0 text-primary fw-semibold">
-                From
-              </span>
-              <input
-                type="date"
-                className="form-control border-0"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="position-relative" style={{ width: "170px" }}>
-            <div className="input-group input-group-sm rounded-pill shadow-sm">
-              <span className="input-group-text bg-white border-0 text-primary fw-semibold">
-                To
-              </span>
-              <input
-                type="date"
-                className="form-control border-0"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <button
-            className="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-            style={{ height: "34px", width: "34px" }}
-            onClick={applyDateFilter}
-          >
-            <i className="bi bi-filter"></i>
-          </button>
-
-          <button
-            className="btn btn-secondary btn-sm rounded-pill"
-            onClick={resetFilters}
-          >
-            <i className="bi bi-x-lg me-1"></i> Reset
-          </button>
-        </div>
-
-        {error && (
-          <Alert variant="danger" className="mt-4">
-            {error}
-          </Alert>
-        )}
-        {!error && currentItems.length === 0 && (
-          <Alert variant="info" className="mt-4">
-            No salary records found for the selected filters. Try adjusting your
-            search or date range.
-          </Alert>
-        )}
-        {currentItems.length > 0 && (
-          <div className="table-responsive mt-4">
-            <Table striped>
-              <thead>
-                <tr>
-                  <th className="text-center">Employee Name</th>
-                  <th className="text-center">Department</th>
-                  <th className="text-center">Salary</th>
-                  <th className="text-center">Attended Days</th>
-                  <th className="text-center">Absent Days</th>
-                  <th className="text-center">Overtime</th>
-                  <th className="text-center">Deduct Time</th>
-                  <th className="text-center">Total Bouns</th>
-                  <th className="text-center">Total Deduction</th>
-                  <th className="text-center">Net salary</th>
-                  <th className="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((record) => (
-                  <tr key={record._id}>
-                    <td className="text-center">
-                      {record.employeeId
-                        ? `${record.employeeId.firstName || ""} ${
-                            record.employeeId.lastName || ""
-                          }`
-                        : "N/A"}
-                    </td>
-                    <td className="text-center">
-                      {record.employeeId.department.departmentName}
-                    </td>
-                    <td className="text-center">{record.employeeId.salary}</td>
-                    <td className="text-center">{record.attendedDays}</td>
-                    <td className="text-center">{record.absentDays}</td>
-                    <td className="text-center">{record.totalOvertime}</td>
-                    <td className="text-center">{record.totalDeduction}</td>
-                    <td className="text-center">
-                      {record.totalBonusAmount !== undefined &&
-                      record.totalBonusAmount !== null
-                        ? Number(record.totalBonusAmount).toFixed(2)
-                        : "0.00"}
-                    </td>
-                    <td className="text-center">
-                      {record.totalDeductionAmount !== undefined &&
-                      record.totalDeductionAmount !== null
-                        ? Number(record.totalDeductionAmount).toFixed(2)
-                        : "0.00"}
-                    </td>
-                    <td className="text-center">
-                      {record.netSalary !== undefined &&
-                      record.netSalary !== null
-                        ? Number(record.netSalary).toFixed(2)
-                        : "0.00"}
-                    </td>
-
-                    <td className="text-center">
-                      <i
-                        className="bi bi-eye text-muted"
-                        style={{ cursor: "pointer", fontSize: "1.2rem" }}
-                        onClick={() => handleView(record._id)}
-                      ></i>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-        )}
-
-        <ReactPaginate
-          previousLabel={"«"}
-          nextLabel={"»"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPayroll.length / itemsPerPage)}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination justify-content-end mb-2"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName={"page-item"}
-          previousLinkClassName={"page-link"}
-          nextClassName={"page-item"}
-          nextLinkClassName={"page-link"}
-          breakClassName={"page-item disabled"}
-          breakLinkClassName={"page-link"}
-          activeClassName={"active"}
-        />
-
-        {viewPayroll && (
-          <ViewPayroll
-            isOpen={viewPayroll}
-            onClose={() => {
-              setViewPayroll(false);
-              setViewData(null);
-            }}
-            data={viewData}
-          />
-        )}
       </div>
     </div>
   );

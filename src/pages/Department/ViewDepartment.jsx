@@ -113,22 +113,28 @@ function Department() {
               >
                 <Col>{department.departmentName}</Col>
                 <Col xs="auto">
-                  <span
-                    className={`${styles.actionIcon} me-2`}
-                    onClick={() => {
-                      setEditDepartment(department);
-                      setNewDepartmentName(department.departmentName);
-                      setShowEditModal(true);
-                    }}
-                  >
-                    ✎
-                  </span>
-                  <span
-                    className={styles.actionIcon}
-                    onClick={() => handleDeleteDepartment(department._id)}
-                  >
-                    🗑
-                  </span>
+                  <div className="d-inline-flex align-items-center">
+                    <button
+                      className="btn btn-sm btn-outline-secondary rounded-circle me-2"
+                      title="Edit"
+                      onClick={() => {
+                        setEditDepartment(department);
+                        setNewDepartmentName(department.departmentName);
+                        setShowEditModal(true);
+                      }}
+                      style={{ width: 40, height: 40, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
+                    >
+                      <i className="fas fa-edit"></i>
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline-danger rounded-circle"
+                      title="Delete"
+                      onClick={() => handleDeleteDepartment(department._id)}
+                      style={{ width: 40, height: 40, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
                 </Col>
               </Row>
             ))}

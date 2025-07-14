@@ -183,198 +183,208 @@ export default function Attendence() {
   };
 
   return (
-    <div className={styles.attendenceContainer}>
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3 ">
-        <div>
-          <h3>Attendance Management</h3>
-          <p className="text-muted mb-0">
-            Track Employee Attendance And Working Hours
-          </p>
-        </div>
-
-        <div className="col-md-3 ms-auto">
-          <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
-            <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
-              Employee
-            </span>
-            <input
-              type="text"
-              className="form-control form-control-sm bg-transparent border-0"
-              value={employeeName}
-              onChange={(e) => setEmployeeName(e.target.value)}
-              placeholder="Enter employee name..."
-            />
-            <button
-              className="btn btn-primary btn-sm rounded-end-pill"
-              onClick={handleSearchByName}
-              style={{ padding: "0.25rem 0.75rem" }}
-            >
-              <i className="bi bi-search"></i>
-            </button>
-          </div>
-          <div style={{ minHeight: "18px" }}>
-            {errors.employeeName && (
-              <small className="text-danger">{errors.employeeName}</small>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="d-flex align-items-center flex-wrap gap-2"
-        style={{ maxWidth: "1000px", marginTop: "20px", marginLeft: "200px" }}
-      >
-        <div className="position-relative ms-auto" style={{ width: "170px" }}>
-          <div className="input-group input-group-sm rounded-pill shadow-sm">
-            <span className="input-group-text bg-white border-0 text-primary fw-semibold">
-              From
-            </span>
-            <input
-              type="date"
-              className="form-control border-0"
-              value={start}
-              onChange={(e) => setStart(e.target.value)}
-            />
-          </div>
-          {errors.fromDate && (
-            <div style={{ position: "absolute", top: "100%", left: 0 }}>
-              <small className="text-danger">{errors.fromDate}</small>
+    <div className="container-fluid py-4">
+      <div className="row justify-content-center">
+        <div className="col-12">
+          <div className="card shadow-lg">
+            <div className="card-body">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3 ">
+                <div>
+                  <h3>Attendance Management</h3>
+                  <p className="text-muted mb-0">
+                    Track Employee Attendance And Working Hours
+                  </p>
+                </div>
+                <div className="col-md-3 ms-auto">
+                  <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
+                    <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
+                      Employee
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control form-control-sm bg-transparent border-0"
+                      value={employeeName}
+                      onChange={(e) => setEmployeeName(e.target.value)}
+                      placeholder="Enter employee name..."
+                    />
+                    <button
+                      className="btn btn-primary btn-sm rounded-end-pill"
+                      onClick={handleSearchByName}
+                      style={{ padding: "0.25rem 0.75rem" }}
+                    >
+                      <i className="bi bi-search"></i>
+                    </button>
+                  </div>
+                  <div style={{ minHeight: "18px" }}>
+                    {errors.employeeName && (
+                      <small className="text-danger">{errors.employeeName}</small>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div
+                className="d-flex align-items-center flex-wrap gap-2"
+                style={{ maxWidth: "1000px", marginTop: "20px", marginLeft: "200px" }}
+              >
+                <div className="position-relative ms-auto" style={{ width: "170px" }}>
+                  <div className="input-group input-group-sm rounded-pill shadow-sm">
+                    <span className="input-group-text bg-white border-0 text-primary fw-semibold">
+                      From
+                    </span>
+                    <input
+                      type="date"
+                      className="form-control border-0"
+                      value={start}
+                      onChange={(e) => setStart(e.target.value)}
+                    />
+                  </div>
+                  {errors.fromDate && (
+                    <div style={{ position: "absolute", top: "100%", left: 0 }}>
+                      <small className="text-danger">{errors.fromDate}</small>
+                    </div>
+                  )}
+                </div>
+                <div className="position-relative" style={{ width: "170px" }}>
+                  <div className="input-group input-group-sm rounded-pill shadow-sm">
+                    <span className="input-group-text bg-white border-0 text-primary fw-semibold">
+                      To
+                    </span>
+                    <input
+                      type="date"
+                      className="form-control border-0"
+                      value={end}
+                      onChange={(e) => setEnd(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <button
+                  className="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                  style={{ height: "34px", width: "34px" }}
+                  onClick={applyDateFilter}
+                >
+                  <i className="bi bi-filter"></i>
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm rounded-pill"
+                  onClick={resetFilters}
+                >
+                  <i className="bi bi-x-lg me-1"></i>
+                </button>
+                <button
+                  className="btn btn-primary btn-sm rounded-pill"
+                  onClick={handleAdd}
+                >
+                  <i className="bi bi-plus-lg me-1"></i> Add Attendance
+                </button>
+              </div>
+              <div className="table-responsive mt-4">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th className="text-center">Employee</th>
+                      <th className="text-center">Date</th>
+                      <th className="text-center">Check-in</th>
+                      <th className="text-center">Check-out</th>
+                      <th className="text-center">Status</th>
+                      <th className="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentItems.length > 0 ? (
+                      currentItems.map((att) => (
+                        <tr key={att._id}>
+                          <td className="text-center">
+                            {att.employeeId
+                              ? `${att.employeeId.firstName || ""} ${
+                                  att.employeeId.lastName || ""
+                                }`
+                              : "Unknown"}
+                          </td>
+                          <td className="text-center">{formatDate(att.date)}</td>
+                          <td className="text-center">{att.checkInTime || "-"}</td>
+                          <td className="text-center">{att.checkOutTime || "-"}</td>
+                          <td className="text-center">{att.status || "N/A"}</td>
+                          <td className="text-center">
+                            <div className="d-inline-flex align-items-center">
+                              <button
+                                className="btn btn-sm btn-outline-primary rounded-circle me-2"
+                                title="View"
+                                onClick={() => handleView(att._id)}
+                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <i className="fas fa-eye"></i>
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-secondary rounded-circle me-2"
+                                title="Edit"
+                                onClick={() => handleEdit(att)}
+                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-danger rounded-circle"
+                                title="Delete"
+                                onClick={() => handleDelete(att._id)}
+                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className="text-center text-muted">
+                          No attendance records found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              {filteredAttendence.length > itemsPerPage && (
+                <div className="d-flex justify-content-end mt-3">
+                  <ReactPaginate
+                    previousLabel={"«"}
+                    nextLabel={"»"}
+                    breakLabel={"..."}
+                    pageCount={Math.ceil(filteredAttendence.length / itemsPerPage)}
+                    onPageChange={handlePageClick}
+                    containerClassName={"pagination mb-0"}
+                    pageClassName={"page-item"}
+                    pageLinkClassName={"page-link"}
+                    previousClassName={"page-item"}
+                    previousLinkClassName={"page-link"}
+                    nextClassName={"page-item"}
+                    nextLinkClassName={"page-link"}
+                    breakClassName={"page-item disabled"}
+                    breakLinkClassName={"page-link"}
+                    activeClassName={"active"}
+                    forcePage={currentPage}
+                  />
+                </div>
+              )}
+              {viewAttendence && (
+                <ViewAttendence
+                  isOpen={viewAttendence}
+                  onClose={() => {
+                    setViewAttendence(false);
+                    setViewData(null);
+                  }}
+                  data={viewData}
+                />
+              )}
+              <AddAttendence
+                isOpen={showModal}
+                onClose={handleCloseModal}
+                initialData={selectedAttendence}
+              />
             </div>
-          )}
-        </div>
-
-        <div className="position-relative" style={{ width: "170px" }}>
-          <div className="input-group input-group-sm rounded-pill shadow-sm">
-            <span className="input-group-text bg-white border-0 text-primary fw-semibold">
-              To
-            </span>
-            <input
-              type="date"
-              className="form-control border-0"
-              value={end}
-              onChange={(e) => setEnd(e.target.value)}
-            />
           </div>
         </div>
-
-        <button
-          className="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-          style={{ height: "34px", width: "34px" }}
-          onClick={applyDateFilter}
-        >
-          <i className="bi bi-filter"></i>
-        </button>
-        <button
-          className="btn btn-secondary btn-sm rounded-pill"
-          onClick={resetFilters}
-        >
-          <i className="bi bi-x-lg me-1"></i>
-        </button>
-
-        <button
-          className="btn btn-primary btn-sm rounded-pill"
-          onClick={handleAdd}
-        >
-          <i className="bi bi-plus-lg me-1"></i> Add Attendance
-        </button>
       </div>
-
-      <div className="table-responsive mt-4">
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th className="text-center">Employee</th>
-              <th className="text-center">Date</th>
-              <th className="text-center">Check-in</th>
-              <th className="text-center">Check-out</th>
-              <th className="text-center">Status</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.length > 0 ? (
-              currentItems.map((att) => (
-                <tr key={att._id}>
-                  <td className="text-center">
-                    {att.employeeId
-                      ? `${att.employeeId.firstName || ""} ${
-                          att.employeeId.lastName || ""
-                        }`
-                      : "Unknown"}
-                  </td>
-                  <td className="text-center">{formatDate(att.date)}</td>
-                  <td className="text-center">{att.checkInTime || "-"}</td>
-                  <td className="text-center">{att.checkOutTime || "-"}</td>
-                  <td className="text-center">{att.status || "N/A"}</td>
-                  <td className="text-center">
-                    <i
-                      className="fas fa-eye text-muted me-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleView(att._id)}
-                    ></i>
-                    <i
-                      className="fas fa-edit text-secondary me-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleEdit(att)}
-                    ></i>
-                    <i
-                      className="fas fa-trash text-danger me-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleDelete(att._id)}
-                    ></i>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center text-muted">
-                  No attendance records found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-{filteredAttendence.length > itemsPerPage && (
-  <div className="d-flex justify-content-end mt-3">
-    <ReactPaginate
-      previousLabel={"«"}
-      nextLabel={"»"}
-      breakLabel={"..."}
-      pageCount={Math.ceil(filteredAttendence.length / itemsPerPage)}
-      onPageChange={handlePageClick}
-      containerClassName={"pagination mb-0"}
-      pageClassName={"page-item"}
-      pageLinkClassName={"page-link"}
-      previousClassName={"page-item"}
-      previousLinkClassName={"page-link"}
-      nextClassName={"page-item"}
-      nextLinkClassName={"page-link"}
-      breakClassName={"page-item disabled"}
-      breakLinkClassName={"page-link"}
-      activeClassName={"active"}
-      forcePage={currentPage}
-    />
-  </div>
-)}
-
-
-      {viewAttendence && (
-        <ViewAttendence
-          isOpen={viewAttendence}
-          onClose={() => {
-            setViewAttendence(false);
-            setViewData(null);
-          }}
-          data={viewData}
-        />
-      )}
-
-      <AddAttendence
-        isOpen={showModal}
-        onClose={handleCloseModal}
-        initialData={selectedAttendence}
-      />
     </div>
   );
 }
