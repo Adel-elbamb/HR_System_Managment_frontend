@@ -156,10 +156,12 @@ function Payroll() {
 
   return (
     <div className={styles.payrollPage}>
-      <div className={styles.pageTitle}>Payroll Management</div>
+      {/* <div className={styles.pageTitle}>Payroll Management</div> */}
       <div className={styles.payrollContainer}>
+        
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3">
-          <div className="col-md-3 ms-auto">
+          <div className={styles.pageTitle} >Payroll Management</div>
+          <div className= "col-md-3 ms-auto m-2">
             <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
               <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
                 Employee

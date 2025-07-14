@@ -1,17 +1,21 @@
 .holidayPage {
     background: #f8f9fb;
+    /* margin-top: 30px; */
+    position: relative;
+    top:20px;
     padding: 0;
     margin: 0;
     border-radius: 0;
     box-shadow: none;
     min-height: 100vh;
+    width: 78rem;
 }
 
 .title {
     text-align: left;
     font-size: 2rem;
     font-weight: 700;
-    color: #2563eb;
+    color: #333;
     margin-top: 32px;
     margin-left: 32px;
     margin-bottom: 32px;
