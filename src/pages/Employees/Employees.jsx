@@ -8,6 +8,7 @@ import {
 import AddEmployee from "./AddEmployee";
 import { useNavigate } from "react-router-dom";
 import styles from "./Employees.module.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
