@@ -13,7 +13,6 @@ const HRChatbot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  // Enhanced suggested questions for HR usage
   const suggestedQuestions = [
     "I want info about Ahmed",
     "Tell me about Ahmed",
@@ -38,13 +37,11 @@ const HRChatbot = () => {
 
     try {
       const response = await askChatBot(questionToSend);
-      // Extract the answer string from the response object
       let answer =
         response?.data?.answer ||
         response?.answer ||
         response?.data ||
         "I'm here to help! What would you like to know about?";
-      // If answer is an object (e.g., {message, results}), stringify or format it
       if (typeof answer === "object" && answer !== null) {
         if (answer.message) {
           answer = answer.message;
@@ -100,16 +97,13 @@ It looks like I couldn't process your request right now. Here are some things I 
     sendMessage(question);
   };
 
-  // Auto-resize textarea
   const handleTextareaChange = (e) => {
     setMessage(e.target.value);
-    // Auto-resize textarea
     const textarea = e.target;
     textarea.style.height = "auto";
     textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px";
   };
 
-  // Component to render suggested questions
   const SuggestedQuestions = () => (
     <div className="suggested-questions">
       <p className="suggestions-label">💡 Quick questions:</p>
@@ -130,7 +124,6 @@ It looks like I couldn't process your request right now. Here are some things I 
 
   return (
     <>
-      {/* Floating Chat Icon */}
       <button
         className={`chat-toggle-btn ${isOpen ? "active" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
@@ -139,10 +132,8 @@ It looks like I couldn't process your request right now. Here are some things I 
         <div className="chat-pulse"></div>
       </button>
 
-      {/* Chat Window */}
       {isOpen && (
         <div className="chat-container">
-          {/* Header */}
           <div className="chat-header">
             <div className="chat-header-content">
               <div className="chat-title">
@@ -158,9 +149,7 @@ It looks like I couldn't process your request right now. Here are some things I 
             </div>
           </div>
 
-          {/* Chat Body */}
           <div className="chat-body">
-            {/* Messages Area */}
             <div className="messages-container">
               {chat.length === 0 && (
                 <div className="welcome-message">
@@ -170,7 +159,6 @@ It looks like I couldn't process your request right now. Here are some things I 
                     I can help you with employee management, payroll, and more!
                   </p>
 
-                  {/* Employee Search Example */}
                   <div className="search-example">
                     <h4>🔍 Employee Search</h4>
                     <p>
@@ -187,7 +175,6 @@ It looks like I couldn't process your request right now. Here are some things I 
                     </p>
                   </div>
 
-                  {/* Suggested Questions */}
                   <SuggestedQuestions />
 
                   <p className="welcome-footer">
@@ -235,7 +222,6 @@ It looks like I couldn't process your request right now. Here are some things I 
                 </div>
               )}
 
-              {/* Show suggested questions after every response */}
               {chat.length > 0 && !loading && (
                 <div className="suggestions-after-response">
                   <SuggestedQuestions />
@@ -245,7 +231,6 @@ It looks like I couldn't process your request right now. Here are some things I 
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <div className="chat-input-container">
               <div className="input-wrapper">
                 <textarea

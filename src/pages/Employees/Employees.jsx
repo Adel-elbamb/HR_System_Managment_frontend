@@ -99,12 +99,34 @@ const Employees = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <input
-                type="date"
-                className={styles.dateInput}
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-              />
+              <div className="mb-2" style={{ width: '100%' }}>
+                <div className="input-group">
+                  <span className="input-group-text" id="calendar-addon">
+                    <i className="fas fa-calendar-alt"></i>
+                  </span>
+                  <input
+                    type="date"
+                    id="dateFilter"
+                    className={`form-control ${styles.dateInput}`}
+                    aria-label="Filter by hiring date"
+                    aria-describedby="calendar-addon"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    placeholder="Filter by hiring date"
+                  />
+                  {dateFilter && (
+                    <button
+                      className="btn btn-outline-secondary"
+                      type="button"
+                      onClick={() => setDateFilter("")}
+                      tabIndex={0}
+                      aria-label="Clear date filter"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  )}
+                </div>
+              </div>
               <button className={styles.clearBtn} onClick={clearFilters}>
               Clear Filter
               </button>
