@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Dashboard.module.css';
-import axiosInstance from '../../services/axiosInstance';
-import { deleteEmployee } from "../../services/employee.services";
+import { getAllEmployees, deleteEmployee } from '../../services/employee.services';
+import { getAttendences } from '../../services/Attendence.services';
+import axiosInstance from "../../services/axiosInstance";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -12,14 +13,17 @@ const Dashboard = () => {
     try {
       setLoading(true);
 
-      const [employeesRes, attendanceRes] = await Promise.all([
-        axiosInstance.get('/employee'),
-        axiosInstance.get('/attendance')
+      const [employeeRes, attendanceRes, departmentRes] = await Promise.all([
+        getAllEmployees(),
+        getAttendences(),
+        axiosInstance.get("/department/")
       ]);
 
-      const employeesData = employeesRes.data.data || [];
-      const attendanceData = attendanceRes.data.data || [];
-
+      const employeesData = employeeRes?.data || [];
+      const attendance = attendanceRes || [];
+      console.log("Attendance Data:", attendance);
+      const departmentsData = departmentRes?.data?.data || departmentRes?.data || [];
+      
       const now = new Date();
       const todayStr = now.toISOString().slice(0, 10);
 
@@ -27,53 +31,64 @@ const Dashboard = () => {
       yesterday.setDate(now.getDate() - 1);
       const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
-      const employeesToday = employeesData.filter(emp => {
-        const dateStr = new Date(emp.createdAt).toISOString().slice(0, 10);
-        return dateStr === todayStr;
-      }).length;
+      const getDateStr = (dateStr) => {
+        if (!dateStr) return null;
+        const match = dateStr.match(/\d{2}\/\d{2}\/\d{4}$/);
+        return match ? match[0].split('/').reverse().join('-') : null;
+      };
 
-      const employeesYesterday = employeesData.filter(emp => {
-        const dateStr = new Date(emp.createdAt).toISOString().slice(0, 10);
-        return dateStr === yesterdayStr;
-      }).length;
+      // Employees
+      const employeesToday = employeesData.filter(emp =>
+        emp.createdAt?.slice(0, 10) === todayStr
+      ).length;
 
-      const presentToday = attendanceData.filter(att => {
-        const dateStr = new Date(att.date).toISOString().slice(0, 10);
-        return dateStr === todayStr && att.status === 'present';
-      }).length;
+      const employeesYesterday = employeesData.filter(emp =>
+        emp.createdAt?.slice(0, 10) === yesterdayStr
+      ).length;
 
-      const onLeave = attendanceData.filter(att => {
-        const dateStr = new Date(att.date).toISOString().slice(0, 10);
-        return dateStr === todayStr && att.status === 'On Leave';
-      }).length;
+      // Attendance
+      const presentToday = attendance.filter(att =>
+        getDateStr(att.date) === todayStr && att.status === 'present'
+      ).length;
+      console.log("Present Today:", presentToday);
+      const presentYesterday = attendance.filter(att =>
+        getDateStr(att.date) === yesterdayStr && att.status === 'present'
+      ).length;
+      console.log("Present Yesterday:", presentYesterday);
+      const onLeave = attendance.filter(att =>
+        getDateStr(att.date) === todayStr && att.status === 'On Leave'
+      ).length;
+      console.log("On Leave Today:", onLeave);
+      const leaveYesterday = attendance.filter(att =>
+        getDateStr(att.date) === yesterdayStr && att.status === 'On Leave'
+      ).length;
+      console.log("On Leave Yesterday:", leaveYesterday);
+      // Departments
+      const departmentsToday = departmentsData.filter(dep =>
+        dep.createdAt?.slice(0, 10) === todayStr
+      ).length;
 
-      const presentYesterday = attendanceData.filter(att => {
-        const dateStr = new Date(att.date).toISOString().slice(0, 10);
-        return dateStr === yesterdayStr && att.status === 'present';
-      }).length;
+      const departmentsYesterday = departmentsData.filter(dep =>
+        dep.createdAt?.slice(0, 10) === yesterdayStr
+      ).length;
 
-      const leaveYesterday = attendanceData.filter(att => {
-        const dateStr = new Date(att.date).toISOString().slice(0, 10);
-        return dateStr === yesterdayStr && att.status === 'On Leave';
-      }).length;
+      const departmentsCountNow = departmentsData.length;
 
-      const totalEmployees = employeesData.length;
-      const departments = new Set(employeesData.map(emp => emp.department)).size;
-
+      // Percentage change function
       const calcChange = (current, previous) => {
         if (previous === 0) return current === 0 ? 0 : 100;
         return Math.round(((current - previous) / previous) * 100);
       };
 
       const statsData = {
-        totalEmployees,
+        totalEmployees: employeesData.length,
         presentToday,
         onLeave,
-        departments,
+        departments: departmentsCountNow,
         totalChange: calcChange(employeesToday, employeesYesterday),
         presentChange: calcChange(presentToday, presentYesterday),
         leaveChange: calcChange(onLeave, leaveYesterday),
-        departmentsChange: 0
+        departmentsChange: calcChange(departmentsToday, departmentsYesterday)
       };
 
       setStats(statsData);
@@ -90,6 +105,7 @@ const Dashboard = () => {
         leaveChange: 0,
         departmentsChange: 0
       });
+      setEmployees([]);
     } finally {
       setLoading(false);
     }
@@ -151,8 +167,8 @@ const Dashboard = () => {
                     <i className="bi bi-person fs-4 text-white"></i>
                   </div>
                   <div>
-                    <div className="fw-semibold text-dark">{emp.name}</div>
-                    <div className="text-muted small">{emp.department?.departmentName || 'No Department'}</div>
+                    <div className="fw-semibold text-dark">{emp.firstName} {emp.lastName}</div>
+                    <div className="text-muted small">{emp.department || 'No Department'}</div>
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-3">
