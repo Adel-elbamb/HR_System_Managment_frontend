@@ -156,10 +156,12 @@ function Payroll() {
 
   return (
     <div className={styles.payrollPage}>
-      <div className={styles.pageTitle}>Payroll Management</div>
+      {/* <div className={styles.pageTitle}>Payroll Management</div> */}
       <div className={styles.payrollContainer}>
+        
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-3">
-          <div className="col-md-3 ms-auto">
+          <div className={styles.pageTitle} >Payroll Management</div>
+          <div className= "col-md-3 ms-auto m-2">
             <div className="input-group input-group-sm rounded-pill bg-light shadow-sm">
               <span className="input-group-text fw-semibold text-primary bg-transparent border-0">
                 Employee
@@ -270,11 +272,24 @@ function Payroll() {
                     <td className="text-center">{record.absentDays}</td>
                     <td className="text-center">{record.totalOvertime}</td>
                     <td className="text-center">{record.totalDeduction}</td>
-                    <td className="text-center">{record.totalBonusAmount}</td>
                     <td className="text-center">
-                      {record.totalDeductionAmount}
+                      {record.totalBonusAmount !== undefined &&
+                      record.totalBonusAmount !== null
+                        ? Number(record.totalBonusAmount).toFixed(2)
+                        : "0.00"}
                     </td>
-                    <td className="text-center">{record.netSalary}</td>
+                    <td className="text-center">
+                      {record.totalDeductionAmount !== undefined &&
+                      record.totalDeductionAmount !== null
+                        ? Number(record.totalDeductionAmount).toFixed(2)
+                        : "0.00"}
+                    </td>
+                    <td className="text-center">
+                      {record.netSalary !== undefined &&
+                      record.netSalary !== null
+                        ? Number(record.netSalary).toFixed(2)
+                        : "0.00"}
+                    </td>
 
                     <td className="text-center">
                       <i

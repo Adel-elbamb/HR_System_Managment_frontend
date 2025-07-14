@@ -90,9 +90,10 @@ const Holiday = () => {
 
   return (
     <div className={styles.holidayPage} dir="rtl">
-      <h2 className={styles.title}>Holiday Management</h2>
+      {/* <h2 className={styles.title}>Holiday Management</h2> */}
       {showError && <div className={styles.errorPopup}>{error}</div>}
       <div className={styles.formSection}>
+         <h2 className={styles.title}>Holiday Management</h2>
         <HolidayForm onAdd={handleAdd} />
       </div>
       {editingHoliday && (
