@@ -20,7 +20,8 @@
 }
 
 .pageTitle {
-  color: #2563eb;
+  color:#333;
+  /* color: #2563eb; */
   font-size: 2rem;
   font-weight: 700;
   text-align: left;
@@ -31,7 +32,7 @@
 }
 
 .payrollContainer {
-  width: 65rem;
+  width: 75rem;
   margin: 0 auto 2rem auto;
   padding: 2rem 2.5rem;
   background: #fff;
