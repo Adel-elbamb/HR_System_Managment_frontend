@@ -270,11 +270,24 @@ function Payroll() {
                     <td className="text-center">{record.absentDays}</td>
                     <td className="text-center">{record.totalOvertime}</td>
                     <td className="text-center">{record.totalDeduction}</td>
-                    <td className="text-center">{record.totalBonusAmount}</td>
                     <td className="text-center">
-                      {record.totalDeductionAmount}
+                      {record.totalBonusAmount !== undefined &&
+                      record.totalBonusAmount !== null
+                        ? Number(record.totalBonusAmount).toFixed(2)
+                        : "0.00"}
                     </td>
-                    <td className="text-center">{record.netSalary}</td>
+                    <td className="text-center">
+                      {record.totalDeductionAmount !== undefined &&
+                      record.totalDeductionAmount !== null
+                        ? Number(record.totalDeductionAmount).toFixed(2)
+                        : "0.00"}
+                    </td>
+                    <td className="text-center">
+                      {record.netSalary !== undefined &&
+                      record.netSalary !== null
+                        ? Number(record.netSalary).toFixed(2)
+                        : "0.00"}
+                    </td>
 
                     <td className="text-center">
                       <i
