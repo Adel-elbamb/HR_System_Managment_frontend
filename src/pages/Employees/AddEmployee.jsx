@@ -154,7 +154,24 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
       const today = new Date();
       if (selectedDate > today) {
         errors.birthdate = "Birthdate cannot be in the future.";
+      } else {
+        // Check if user is at least 16 years old
+        const minBirthdate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
+        if (selectedDate > minBirthdate) {
+          errors.birthdate = "Employee must be at least 16 years old.";
+        }
       }
+    }
+
+    // Salary, Overtime, Deduction must be > 0
+    if (form.salary !== "" && (Number(form.salary) <= 0)) {
+      errors.salary = "Salary must be greater than zero.";
+    }
+    if (form.overtimeValue !== null && (Number(form.overtimeValue) <= 0)) {
+      errors.overtimeValue = "Overtime value must be greater than zero.";
+    }
+    if (form.deductionValue !== null && (Number(form.deductionValue) <= 0)) {
+      errors.deductionValue = "Deduction value must be greater than zero.";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -493,6 +510,7 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                     value={form.salary}
                     onChange={handleChange}
                     type="number"
+                    min="1"
                   />
                   <label className={styles.outlinedLabel}>Salary</label>
                 </div>
@@ -651,6 +669,7 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       value={form.overtimeValue ?? ""}
                       onChange={handleChange}
                       type="number"
+                      min="1"
                     />
                     <label className={styles.outlinedLabel}>Overtime Value</label>
                   </div>
@@ -685,6 +704,7 @@ const AddEmployee = ({ onSuccess, onCancel }) => {
                       value={form.deductionValue ?? ""}
                       onChange={handleChange}
                       type="number"
+                      min="1"
                     />
                     <label className={styles.outlinedLabel}>Deduction Value</label>
                   </div>
