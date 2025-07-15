@@ -64,6 +64,40 @@ const EditEmployee = () => {
     setLoading(true);
     setError("");
     setFieldErrors({});
+
+    const errors = {};
+
+    // Validate salary, overtimeValue, deductionValue > 0
+    if (form.salary !== undefined && form.salary !== "" && Number(form.salary) <= 0) {
+      errors.salary = "Salary must be greater than zero.";
+    }
+    if (form.overtimeValue !== undefined && form.overtimeValue !== "" && Number(form.overtimeValue) <= 0) {
+      errors.overtimeValue = "Overtime value must be greater than zero.";
+    }
+    if (form.deductionValue !== undefined && form.deductionValue !== "" && Number(form.deductionValue) <= 0) {
+      errors.deductionValue = "Deduction value must be greater than zero.";
+    }
+
+    // Validate birthdate: at least 16 years before today
+    if (form.birthdate) {
+      const selectedDate = new Date(form.birthdate);
+      const today = new Date();
+      if (selectedDate > today) {
+        errors.birthdate = "Birthdate cannot be in the future.";
+      } else {
+        const minBirthdate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
+        if (selectedDate > minBirthdate) {
+          errors.birthdate = "Employee must be at least 16 years old.";
+        }
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
+    }
+
     const submitData = {
       ...form,
       weekendDays: form.weekendDays && Array.isArray(form.weekendDays)
