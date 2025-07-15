@@ -289,22 +289,8 @@ function Payroll() {
                               >
                                 <i className="fas fa-eye"></i>
                               </button>
-                              <button
-                                className="btn btn-sm btn-outline-secondary rounded-circle me-2"
-                                title="Edit"
-                                onClick={() => handleEdit(record)}
-                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                              >
-                                <i className="fas fa-edit"></i>
-                              </button>
-                              <button
-                                className="btn btn-sm btn-outline-danger rounded-circle"
-                                title="Delete"
-                                onClick={() => handleDelete(record._id)}
-                                style={{ width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                              >
-                                <i className="fas fa-trash"></i>
-                              </button>
+                             
+                             
                             </div>
                           </td>
                         </tr>
